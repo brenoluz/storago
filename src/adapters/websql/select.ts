@@ -1,22 +1,37 @@
 import Table from '../../table';
 import {default as SelectInteface, Rowset} from '../select';
 
-type queryTuple = [string, any[]];
+type paramsType = string|number;
+type whereTuple = [string, paramsType[]?];
+type joinTuple = [string, string];
+type orderType = "ASC"|"DESC";
 
 export default class Select implements SelectInteface{
 
-  private table: Table;
+  private Table: typeof Table;
   private _offset: number;
+  private _distinct: boolean = false;
   private _from: string;
-  private _where: queryTuple[];
-  private _columns: string[];
+  private _where: whereTuple[];
+  private _column: string[];
+  private _join: joinTuple[];
+  private _joinLeft: joinTuple[];
+  private _joinRight: joinTuple[];
+  private _params: paramsType[];
+  private _order: string[];
 
-  constructor(table: Table){
+  constructor(table: typeof Table){
 
-    this.table = table;
+    this.Table = table;
   }
 
-  from(from: string, columns?: string[]) : Select {
+  distinct(flag: boolean = true) : Select {
+
+    this._distinct = flag;
+    return this;
+  }
+
+  from(from: string, columns?: paramsType[]) : Select {
 
     this._from = from;
     if(!columns){
@@ -26,13 +41,13 @@ export default class Select implements SelectInteface{
     columns.push('rowid');
     
     for(let column of columns){
-      this._columns.push(`${from}.${column}`);
+      this._column.push(`${from}.${column}`);
     }
 
     return this;
   }
 
-  where(criteria: string, params: any|any[]) : Select {
+  where(criteria: string, params?: paramsType[]) : Select {
 
     if(!Array.isArray(params))
 
@@ -40,12 +55,97 @@ export default class Select implements SelectInteface{
     return this;
   }
 
+  join(tableName: string, on: string, columns?: string[]) : Select {
+
+    this._join.push([tableName, on]);
+    if(!!columns){
+      this._column.concat(columns);
+    }
+    return this;
+  }
+
+  joinLeft(tableName: string, on: string, columns?: string[]) : Select {
+
+    this._joinLeft.push([tableName, on]);
+    this._column.concat(columns);
+    return this;
+  }
+
+  joinRight(tableName: string, on: string, columns: string[]) : Select {
+
+    this._joinRight.push([tableName, on]);
+    this._column.concat(columns);
+    return this;
+  }
+
+  order(column: string, direction?: orderType){
+
+    if(!direction){
+      direction = 'ASC';
+    }
+
+    this._order.push(`${column} ${direction}`);
+  }
+
   render() : string {
 
-    return '';
+    this._params = [];
+
+    if(!this._from && this.Table){
+      this.from(this.Table.schema.name);
+    }
+
+    let sql = 'SELECT';
+    if(this._distinct){
+      sql += ' DISTINCT';
+    }
+
+    sql += this._column.join(' ,');
+    sql += this._from;
+
+    //join
+    if(this._join.length > 0){
+      for(let join of this._join){
+        sql += ` JOIN ${join[0]} ON ${join[1]}`;
+      }
+    }
+
+    //left join
+    if(this._joinLeft.length > 0){
+      for(let join of this._joinLeft){
+        sql += ` JOIN LEFT ${join[0]} ON ${join[1]}`;
+      }
+    }
+
+    //where
+    let where_size = this._where.length;
+    let whereAndLimit = where_size -1;
+    if(where_size > 0){
+      sql += ' WHERE ';
+      for(let w in this._where){
+        let i: number = parseInt(w);
+        let where = this._where[w];
+        sql += where[0];
+        if(whereAndLimit != i){
+          sql += ' AND ';
+        }
+        if(!!where[1]){
+          this._params.concat(where[1]);
+        }
+      }
+    }
+
+    sql += this._order.join(' ');
+    return sql;
+  }
+
+  toString() : string {
+    return this.render();
   }
 
   execute(): Promise<Rowset> {
+
+    let 
     
     let rows : Rowset = [1,2];
     return Promise.resolve(rows);
