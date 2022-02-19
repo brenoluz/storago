@@ -1,4 +1,8 @@
-export default class{
+import { Connector } from "../connector";
+import { WebSqlSelect } from "./select";
+import { Table } from "../../table";
+
+export class WebsqlConnector implements Connector{
 
   db: Database;
 
@@ -12,7 +16,12 @@ export default class{
     return new Promise(this.db.transaction);
   }
 
-  public async query(sql: DOMString, data?: ObjectArray) : Promise<SQLResultSetRowList> {
+  public select(table: typeof Table) : WebSqlSelect {
+    let select = new WebSqlSelect(table, this);
+    return select;
+  }
+
+  public async query(sql: DOMString, data?: ObjectArray) : Promise<SQLResultSet> {
 
     let tx : SQLTransaction = await this.transaction();
 
@@ -20,7 +29,7 @@ export default class{
 
       tx.executeSql(sql, data, (tx: SQLTransaction, result: SQLResultSet): void => {
 
-        resolve(result.rows);
+        resolve(result);
 
       }, (tx: SQLTransaction, error: SQLError): boolean => {
 

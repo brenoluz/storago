@@ -1,9 +1,11 @@
 import Schema from './schema';
-import Select from './adapters/select';
+import {Select} from './adapters/select';
 
-export default abstract class Table{
+export class Table{
 
+  public foo: string;
   public static schema: Schema;
+  [key: string]: any;
 
   public static find(where: string, param: string | number) : any[] {
     
@@ -13,5 +15,16 @@ export default abstract class Table{
 
   public static select() : Select{
 
-    return this.schema.select();
+    return this.schema.select(this);
   }
+
+  public static createFromDB(row: { [index: string]: any; }) : Table {
+
+    let instance = new this;
+    for(let a in row){
+      instance[a] = row[a];
+    }
+
+    return instance;
+  }
+}

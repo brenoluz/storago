@@ -1,8 +1,9 @@
 
-export type Rowset = any[];
 
-export default interface Select{
+export interface Select{
 
-  execute() : Promise<Rowset>;
+  from(from: string, columns?: any[]) : Select;
+  execute() : Promise<any>;
+  all() : Promise<any[]>;
   render() : string;
 }

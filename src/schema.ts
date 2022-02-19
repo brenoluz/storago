@@ -1,23 +1,30 @@
-
+import { Connector } from "./adapters/connector";
+import { Select } from "./adapters/select";
+import { Table } from "./table";
 
 export default class{
 
   name: string;
   fields: object;
-  db: Database;
+  connector: Connector;
 
-  constructor(name: string, fields: object, db?: Database){
+  constructor(name: string, fields: object, connector?: Connector){
 
     this.name = name;
     this.fields = fields;
 
-    if(!!db){
-      this.db = db;
+    if(!!connector){
+      this.connector = connector;
     }
   }
 
-  public select() : Select{
+  public getConnector() : Connector {
+    return this.connector;
+  }
 
-
+  public select(table: typeof Table) : Select {
+    let select: Select = this.connector.select(table);
+    select.from(this.name, Object.keys(this.fields));
+    return select;
   }
 }

@@ -1,13 +1,15 @@
-import Table from '../../table';
-import {default as SelectInteface, Rowset} from '../select';
+import { WebsqlConnector } from './connector';
+import {Select} from '../select';
+import {Table} from '../../table';
 
 type paramsType = string|number;
 type whereTuple = [string, paramsType[]?];
 type joinTuple = [string, string];
 type orderType = "ASC"|"DESC";
 
-export default class Select implements SelectInteface{
+export class WebSqlSelect implements Select{
 
+  private conn: WebsqlConnector;
   private Table: typeof Table;
   private _offset: number;
   private _distinct: boolean = false;
@@ -20,18 +22,18 @@ export default class Select implements SelectInteface{
   private _params: paramsType[];
   private _order: string[];
 
-  constructor(table: typeof Table){
-
+  constructor(table: typeof Table, conn: WebsqlConnector){
+    this.conn = conn;
     this.Table = table;
   }
 
-  distinct(flag: boolean = true) : Select {
+  distinct(flag: boolean = true) : WebSqlSelect {
 
     this._distinct = flag;
     return this;
   }
 
-  from(from: string, columns?: paramsType[]) : Select {
+  from(from: string, columns?: paramsType[]) : WebSqlSelect {
 
     this._from = from;
     if(!columns){
@@ -47,7 +49,7 @@ export default class Select implements SelectInteface{
     return this;
   }
 
-  where(criteria: string, params?: paramsType[]) : Select {
+  where(criteria: string, params?: paramsType[]) : WebSqlSelect {
 
     if(!Array.isArray(params))
 
@@ -55,7 +57,7 @@ export default class Select implements SelectInteface{
     return this;
   }
 
-  join(tableName: string, on: string, columns?: string[]) : Select {
+  join(tableName: string, on: string, columns?: string[]) : WebSqlSelect {
 
     this._join.push([tableName, on]);
     if(!!columns){
@@ -64,14 +66,14 @@ export default class Select implements SelectInteface{
     return this;
   }
 
-  joinLeft(tableName: string, on: string, columns?: string[]) : Select {
+  joinLeft(tableName: string, on: string, columns?: string[]) : WebSqlSelect {
 
     this._joinLeft.push([tableName, on]);
     this._column.concat(columns);
     return this;
   }
 
-  joinRight(tableName: string, on: string, columns: string[]) : Select {
+  joinRight(tableName: string, on: string, columns: string[]) : WebSqlSelect {
 
     this._joinRight.push([tableName, on]);
     this._column.concat(columns);
@@ -90,10 +92,10 @@ export default class Select implements SelectInteface{
   render() : string {
 
     this._params = [];
-
+    /*
     if(!this._from && this.Table){
       this.from(this.Table.schema.name);
-    }
+    }*/
 
     let sql = 'SELECT';
     if(this._distinct){
@@ -143,11 +145,22 @@ export default class Select implements SelectInteface{
     return this.render();
   }
 
-  execute(): Promise<Rowset> {
+  public async execute(): Promise<SQLResultSet> {
 
-    let 
-    
-    let rows : Rowset = [1,2];
-    return Promise.resolve(rows);
+    let sql: string = this.render();
+    return this.conn.query(sql, this._params);
+  }
+
+  public async all() : Promise<Table[]> {
+
+    let rowset: Table[] = [];
+    let result = await this.execute();
+
+    for(let i = 0; result.rows.length > i; i++){
+      let row = result.rows.item(i);
+      rowset.push(this.Table.createFromDB(row));
+    }
+
+    return rowset;
   }
 }
