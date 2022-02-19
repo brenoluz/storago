@@ -18,7 +18,7 @@ export class Table{
     return this.schema.select(this);
   }
 
-  public static createFromDB(row: { [index: string]: any; }) : Table {
+  public static createFromDB(row: {[index: string]: any;}) : Table {
 
     let instance = new this;
     for(let a in row){
