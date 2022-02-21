@@ -1,3 +1,5 @@
+import { WebSQLAdapter } from "./adapter";
 
-
-export default {}
+export default {
+  adapter: WebSQLAdapter,
+}

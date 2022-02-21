@@ -1,3 +1,5 @@
-export { default as websql } from './websql';
+import WebSQL from './websql';
 
-
+export default {
+  WebSQL: WebSQL,
+}

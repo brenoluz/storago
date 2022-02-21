@@ -7,7 +7,7 @@ export interface fieldsArray {
   [index: string]: Field;
 }
 
-export default class{
+export class Schema{
 
   private name: string;
   private fields: fieldsArray;

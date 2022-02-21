@@ -9,8 +9,12 @@ export abstract class Field{
 
   _config: config;
 
-  constructor(config?: object){
+  constructor(config?: config){
     this._config = config;
+  }
+
+  public getName(name: string) : string {
+    return name;
   }
 
   abstract toDB(value: any) : any;

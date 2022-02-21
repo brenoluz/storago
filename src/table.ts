@@ -1,16 +1,16 @@
-import Schema from './schema';
-import {Select} from './adapters/select';
+import { Schema } from './schema';
+import { Select, paramsType } from './adapters/select';
 
 export class Table{
 
-  public foo: string;
   public static schema: Schema;
   [key: string]: any;
 
-  public static find(where: string, param: string | number) : any[] {
+  public static find(where: string, param: paramsType) : Promise<any[]> {
     
-    
-    return [];
+    let select: Select = this.select();
+    select.where(`${where} = ?`, param);
+    return select.all();
   };
 
   public static select() : Select{

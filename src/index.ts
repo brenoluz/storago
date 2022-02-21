@@ -1,3 +1,3 @@
-export {default as Table} from './table';
-export {default as Schema} from './schema';
-export {default as adapter} from './adapters';
+export { Table } from './table';
+export { Schema } from './schema';
+export { default as fields } from './field';

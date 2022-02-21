@@ -1,16 +1,14 @@
-import { WebsqlConnector } from './connector';
-import {Select} from '../select';
-import {Table} from '../../table';
+import { WebSQLAdapter } from './adapter';
+import { Select, paramsType } from '../select';
+import { Table } from '../../table';
+import { Query } from '../query';
 
-type paramsType = string|number;
 type whereTuple = [string, paramsType[]?];
 type joinTuple = [string, string];
 type orderType = "ASC"|"DESC";
 
-export class WebSqlSelect implements Select{
+export class WebSQLSelect extends Query implements Select{
 
-  private conn: WebsqlConnector;
-  private Table: typeof Table;
   private _offset: number;
   private _distinct: boolean = false;
   private _from: string;
@@ -22,18 +20,17 @@ export class WebSqlSelect implements Select{
   private _params: paramsType[];
   private _order: string[];
 
-  constructor(table: typeof Table, conn: WebsqlConnector){
-    this.conn = conn;
-    this.Table = table;
+  constructor(table: typeof Table, conn: WebSQLAdapter){
+    super(table, conn);
   }
 
-  distinct(flag: boolean = true) : WebSqlSelect {
+  distinct(flag: boolean = true) : WebSQLSelect {
 
     this._distinct = flag;
     return this;
   }
 
-  from(from: string, columns?: paramsType[]) : WebSqlSelect {
+  from(from: string, columns?: paramsType[]) : WebSQLSelect {
 
     this._from = from;
     if(!columns){
@@ -49,15 +46,17 @@ export class WebSqlSelect implements Select{
     return this;
   }
 
-  where(criteria: string, params?: paramsType[]) : WebSqlSelect {
+  where(criteria: string, params?: paramsType[] | paramsType) : WebSQLSelect {
 
-    if(!Array.isArray(params))
+    if(!Array.isArray(params)){
+      params = [params];
+    }
 
     this._where.push([criteria, params]);
     return this;
   }
 
-  join(tableName: string, on: string, columns?: string[]) : WebSqlSelect {
+  join(tableName: string, on: string, columns?: string[]) : WebSQLSelect {
 
     this._join.push([tableName, on]);
     if(!!columns){
@@ -66,14 +65,14 @@ export class WebSqlSelect implements Select{
     return this;
   }
 
-  joinLeft(tableName: string, on: string, columns?: string[]) : WebSqlSelect {
+  joinLeft(tableName: string, on: string, columns?: string[]) : WebSQLSelect {
 
     this._joinLeft.push([tableName, on]);
     this._column.concat(columns);
     return this;
   }
 
-  joinRight(tableName: string, on: string, columns: string[]) : WebSqlSelect {
+  joinRight(tableName: string, on: string, columns: string[]) : WebSQLSelect {
 
     this._joinRight.push([tableName, on]);
     this._column.concat(columns);

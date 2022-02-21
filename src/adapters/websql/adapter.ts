@@ -1,8 +1,8 @@
 import { Connector, engineKind } from "../connector";
-import { WebSqlSelect } from "./select";
+import { WebSQLSelect } from "./select";
 import { Table } from "../../table";
 
-export class WebsqlConnector implements Connector{
+export class WebSQLAdapter implements Connector{
 
   db: Database;
   engine: engineKind = engineKind.WebSQL;
@@ -17,8 +17,8 @@ export class WebsqlConnector implements Connector{
     return new Promise(this.db.transaction);
   }
 
-  public select(table: typeof Table) : WebSqlSelect {
-    let select = new WebSqlSelect(table, this);
+  public select(table: typeof Table) : WebSQLSelect {
+    let select = new WebSQLSelect(table, this);
     return select;
   }
 
