@@ -18,8 +18,8 @@ export class Text extends Field{
     if(conn.engine == engineKind.PostgreSQL){
       return 'VARCHAR';
 
-    } if(conn.engine == engineKind.WebSQL){
-      return 'text';
     }
+
+    return 'TEXT';
   }
 }

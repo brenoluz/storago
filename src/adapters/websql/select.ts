@@ -3,22 +3,22 @@ import { Select, paramsType } from '../select';
 import { Table } from '../../table';
 import { Query } from '../query';
 
-type whereTuple = [string, paramsType[]?];
+type whereTuple = [string, paramsType[]|undefined];
 type joinTuple = [string, string];
 type orderType = "ASC"|"DESC";
 
 export class WebSQLSelect extends Query implements Select{
 
-  private _offset: number;
+  private _offset: number = 0;
   private _distinct: boolean = false;
-  private _from: string;
-  private _where: whereTuple[];
-  private _column: string[];
-  private _join: joinTuple[];
-  private _joinLeft: joinTuple[];
-  private _joinRight: joinTuple[];
-  private _params: paramsType[];
-  private _order: string[];
+  private _from: string = '';
+  private _where: whereTuple[] = [];
+  private _column: string[] = [];
+  private _join: joinTuple[] = [];
+  private _joinLeft: joinTuple[] = [];
+  private _joinRight: joinTuple[] = [];
+  private _params: paramsType[] = [];
+  private _order: string[] = [];
 
   constructor(table: typeof Table, conn: WebSQLAdapter){
     super(table, conn);
@@ -48,7 +48,7 @@ export class WebSQLSelect extends Query implements Select{
 
   where(criteria: string, params?: paramsType[] | paramsType) : WebSQLSelect {
 
-    if(!Array.isArray(params)){
+    if(params !== undefined && !Array.isArray(params)){
       params = [params];
     }
 
@@ -68,7 +68,9 @@ export class WebSQLSelect extends Query implements Select{
   joinLeft(tableName: string, on: string, columns?: string[]) : WebSQLSelect {
 
     this._joinLeft.push([tableName, on]);
-    this._column.concat(columns);
+    if(!!columns){
+      this._column.concat(columns);
+    }
     return this;
   }
 

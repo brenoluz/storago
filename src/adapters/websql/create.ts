@@ -5,7 +5,7 @@ export class CreateWebSQL extends Create{
  
   private getColumns() : string[] {
 
-    let columns: string[];
+    const columns: string[] = [];
     let fields: fieldsArray = this.Table.schema.getFields();
 
     for(let name in fields){

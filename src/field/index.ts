@@ -1,5 +1,5 @@
 import { Text } from "./text";
 
-export default {
+export const fields = {
   Text: Text,
 }

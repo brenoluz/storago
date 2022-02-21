@@ -2,6 +2,7 @@ import { Adapter } from "./adapters/adapter";
 import { Select } from "./adapters/select";
 import { Table } from "./table";
 import { Field } from "./field/field";
+import { session } from './session';
 
 export interface fieldsArray {
   [index: string]: Field;
@@ -13,14 +14,11 @@ export class Schema{
   private fields: fieldsArray;
   private conn: Adapter;
 
-  constructor(name: string, fields: fieldsArray, Adapter?: Adapter){
+  constructor(name: string, fields: fieldsArray, adapter: Adapter = session.adapter){
 
     this.name = name;
     this.fields = fields;
-
-    if(!!Adapter){
-      this.conn = Adapter;
-    }
+    this.conn = adapter;
   }
 
   public getName() : string {

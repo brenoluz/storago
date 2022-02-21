@@ -9,7 +9,8 @@ export abstract class Field{
 
   _config: config;
 
-  constructor(config?: config){
+  constructor(config: config = {}){
+    
     this._config = config;
   }
 
