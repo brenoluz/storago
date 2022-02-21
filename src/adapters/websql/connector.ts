@@ -1,10 +1,11 @@
-import { Connector } from "../connector";
+import { Connector, engineKind } from "../connector";
 import { WebSqlSelect } from "./select";
 import { Table } from "../../table";
 
 export class WebsqlConnector implements Connector{
 
   db: Database;
+  engine: engineKind = engineKind.WebSQL;
 
   constructor(name: string, description: string, size: number){
 
