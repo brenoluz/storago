@@ -1,4 +1,4 @@
-import { Connector } from "../adapters/connector";
+import { Adapter } from "../adapters/adapter";
 
 export type config = {
   default?: any;
@@ -19,5 +19,5 @@ export abstract class Field{
 
   abstract toDB(value: any) : any;
   abstract fromDB(value: any) : any;
-  abstract castDB(conn: Connector) : string;
+  abstract castDB(conn: Adapter) : string;
 }

@@ -1,4 +1,4 @@
-import { Connector } from "./adapters/connector";
+import { Adapter } from "./adapters/adapter";
 import { Select } from "./adapters/select";
 import { Table } from "./table";
 import { Field } from "./field/field";
@@ -11,15 +11,15 @@ export class Schema{
 
   private name: string;
   private fields: fieldsArray;
-  private conn: Connector;
+  private conn: Adapter;
 
-  constructor(name: string, fields: fieldsArray, connector?: Connector){
+  constructor(name: string, fields: fieldsArray, Adapter?: Adapter){
 
     this.name = name;
     this.fields = fields;
 
-    if(!!connector){
-      this.conn = connector;
+    if(!!Adapter){
+      this.conn = Adapter;
     }
   }
 
@@ -31,7 +31,7 @@ export class Schema{
     return this.fields;
   }
 
-  public getConnector() : Connector {
+  public getAdapter() : Adapter {
     return this.conn;
   }
 

@@ -1,4 +1,4 @@
-import { Connector, engineKind } from "../adapters/connector";
+import { Adapter, engineKind } from "../adapters/adapter";
 import { Field } from "./field";
 
 export class Text extends Field{
@@ -13,7 +13,7 @@ export class Text extends Field{
     return ''.trim();
   }
 
-  public castDB(conn: Connector): string {
+  public castDB(conn: Adapter): string {
     
     if(conn.engine == engineKind.PostgreSQL){
       return 'VARCHAR';

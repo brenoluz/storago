@@ -1,8 +1,8 @@
-import { Connector, engineKind } from "../connector";
+import { Adapter, engineKind } from "../adapter";
 import { WebSQLSelect } from "./select";
 import { Table } from "../../table";
 
-export class WebSQLAdapter implements Connector{
+export class WebSQLAdapter implements Adapter{
 
   db: Database;
   engine: engineKind = engineKind.WebSQL;

@@ -6,7 +6,7 @@ export enum engineKind {
   PostgreSQL,
 }
 
-export interface Connector{
+export interface Adapter{
 
   engine: engineKind;
 

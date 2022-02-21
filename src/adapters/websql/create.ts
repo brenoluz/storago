@@ -11,7 +11,7 @@ export class CreateWebSQL extends Create{
     for(let name in fields){
       let field = fields[name];
       name = field.getName(name);
-      columns.push(`${name} ${field.castDB(this.coon)}`);
+      columns.push(`${name} ${field.castDB(this.conn)}`);
     }
 
     return columns;
@@ -29,6 +29,6 @@ export class CreateWebSQL extends Create{
   public execute() : Promise<SQLResultSet> {
 
     let sql: string = this.render();
-    return this.coon.query(sql);
+    return this.conn.query(sql);
   }
 }

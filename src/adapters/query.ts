@@ -1,12 +1,12 @@
 import { Table } from '../table';
-import { Connector } from './connector';
+import { Adapter } from './adapter';
 
 export abstract class Query{
 
-  protected conn: Connector;
+  protected conn: Adapter;
   protected Table: typeof Table;
 
-  constructor(table: typeof Table, conn: Connector){
+  constructor(table: typeof Table, conn: Adapter){
   
     this.Table = table;
     this.conn = conn;
