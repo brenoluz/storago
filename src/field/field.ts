@@ -7,15 +7,17 @@ export type config = {
 
 export abstract class Field{
 
-  _config: config;
+  protected config: config;
+  protected name: string;
 
-  constructor(config: config = {}){
+  constructor(name: string, config: config = {}){
     
-    this._config = config;
+    this.name = name;
+    this.config = config;
   }
 
-  public getName(name: string) : string {
-    return name;
+  public getName() : string {
+    return this.name;
   }
 
   abstract toDB(value: any) : any;

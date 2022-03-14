@@ -1,16 +1,14 @@
 import { Create } from "../create";
-import { fieldsArray } from "../../schema";
 
 export class CreateWebSQL extends Create{
  
   private getColumns() : string[] {
 
     const columns: string[] = [];
-    let fields: fieldsArray = this.Table.schema.getFields();
+    let fields = this.Model.schema.getFields();
 
-    for(let name in fields){
-      let field = fields[name];
-      name = field.getName(name);
+    for(let field of fields){
+      let name = field.getName();
       columns.push(`${name} ${field.castDB(this.conn)}`);
     }
 
@@ -20,7 +18,7 @@ export class CreateWebSQL extends Create{
   public render() : string {
 
     let columns: string[] = this.getColumns();
-    let sql = `CREATE TABLE IF NOT EXISTS ${this.Table.schema.getName()} (`;
+    let sql = `CREATE TABLE IF NOT EXISTS ${this.Model.schema.getName()} (`;
     sql += columns.join(', ');
     sql += ');';
     return sql;

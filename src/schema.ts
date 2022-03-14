@@ -4,17 +4,15 @@ import { Model } from "./model";
 import { Field } from "./field/field";
 import { session } from './session';
 
-export interface fieldsArray {
-  [index: string]: Field;
-}
+
 
 export class Schema{
 
   private name: string;
-  private fields: fieldsArray;
+  private fields: Field[];
   private conn: Adapter;
 
-  constructor(name: string, fields: fieldsArray, adapter: Adapter = session.adapter){
+  constructor(name: string, fields: Field[], adapter: Adapter = session.adapter){
 
     this.name = name;
     this.fields = fields;
@@ -25,7 +23,7 @@ export class Schema{
     return this.name;
   }
 
-  public getFields() : fieldsArray {
+  public getFields() : Field[] {
     return this.fields;
   }
 
