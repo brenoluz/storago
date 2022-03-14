@@ -1,8 +1,9 @@
 {
-  "name": "storago2",
+  "name": "@storago/orm",
   "version": "1.0.0",
-  "description": "",
-  "main": "webpack.config.js",
+  "description": "WebSql ORM for Single Page Application",
+  "main": "dist/storago.dev.js",
+  "types": "dist/types",
   "dependencies": {
     "@types/websql": "^0.0.27"
   },
@@ -34,6 +35,17 @@
     "start": "webpack server --open"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Breno Luz",
+  "license": "ISC",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brenoluz/storago.git"
+  },
+  "bugs": {
+    "url": "https://github.com/brenoluz/storago/issues"
+  },
+  "homepage": "https://github.com/brenoluz/storago#readme"
 }

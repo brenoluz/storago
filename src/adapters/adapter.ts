@@ -1,5 +1,5 @@
 import { Select } from "./select";
-import { Table } from "../table";
+import { Model } from "../model";
 
 export enum engineKind {
   WebSQL,
@@ -11,5 +11,5 @@ export interface Adapter{
   engine: engineKind;
 
   query(sql: any, data?: any) : Promise<any>;
-  select(table: typeof Table) : Select;
+  select(model: typeof Model) : Select;
 }

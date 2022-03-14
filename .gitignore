@@ -1,5 +1,4 @@
 node_modules/
-dist/
 .tsbuild/
 /test/server/bundle.js
 package-lock.json

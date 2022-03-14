@@ -1,6 +1,6 @@
 import { Adapter } from "./adapters/adapter";
 import { Select } from "./adapters/select";
-import { Table } from "./table";
+import { Model } from "./model";
 import { Field } from "./field/field";
 import { session } from './session';
 
@@ -33,8 +33,8 @@ export class Schema{
     return this.conn;
   }
 
-  public select(table: typeof Table) : Select {
-    let select: Select = this.conn.select(table);
+  public select(model: typeof Model) : Select {
+    let select: Select = this.conn.select(model);
     select.from(this.name, Object.keys(this.fields));
     return select;
   }

@@ -1,7 +1,7 @@
 import { Schema } from './schema';
 import { Select, paramsType } from './adapters/select';
 
-export class Table{
+export class Model{
 
   public static schema: Schema;
   [key: string]: any;
@@ -18,7 +18,7 @@ export class Table{
     return this.schema.select(this);
   }
 
-  public static createFromDB(row: {[index: string]: any;}) : Table {
+  public static createFromDB(row: {[index: string]: any;}) : Model {
 
     let instance = new this;
     for(let a in row){

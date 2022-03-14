@@ -1,6 +1,6 @@
 import { Adapter, engineKind } from "../adapter";
 import { WebSQLSelect } from "./select";
-import { Table } from "../../table";
+import { Model } from "../../model";
 
 export class WebSQLAdapter implements Adapter{
 
@@ -17,7 +17,7 @@ export class WebSQLAdapter implements Adapter{
     return new Promise(this.db.transaction);
   }
 
-  public select(table: typeof Table) : WebSQLSelect {
+  public select(table: typeof Model) : WebSQLSelect {
     let select = new WebSQLSelect(table, this);
     return select;
   }

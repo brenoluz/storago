@@ -1,14 +1,14 @@
-import { Table } from '../table';
+import { Model } from '../model';
 import { Adapter } from './adapter';
 
 export abstract class Query{
 
   protected conn: Adapter;
-  protected Table: typeof Table;
+  protected Model: typeof Model;
 
-  constructor(table: typeof Table, conn: Adapter){
+  constructor(model: typeof Model, conn: Adapter){
   
-    this.Table = table;
+    this.Model = model;
     this.conn = conn;
   }
 }
