@@ -9,6 +9,7 @@ export abstract class Field{
 
   protected config: config;
   protected name: string;
+  protected virtual: boolean = false;
 
   constructor(name: string, config: config = {}){
     
@@ -18,6 +19,11 @@ export abstract class Field{
 
   public getName() : string {
     return this.name;
+  }
+
+  public isVirtual() : boolean{
+
+    return this.virtual;
   }
 
   abstract toDB(value: any) : any;

@@ -1,14 +1,16 @@
 import { WebSQLAdapter } from './adapter';
-import { Select, paramsType } from '../select';
+import { Select } from '../select';
 import { Model } from '../../model';
-import { Query } from '../query';
+import { paramsType } from '../query';
 
 type whereTuple = [string, paramsType[]|undefined];
 type joinTuple = [string, string];
 type orderType = "ASC"|"DESC";
 
-export class WebSQLSelect extends Query implements Select{
+export class WebSQLSelect implements Select{
 
+  private Model: typeof Model;
+  private adapter: WebSQLAdapter;
   private _offset: number = 0;
   private _distinct: boolean = false;
   private _from: string = '';
@@ -20,8 +22,9 @@ export class WebSQLSelect extends Query implements Select{
   private _params: paramsType[] = [];
   private _order: string[] = [];
 
-  constructor(model: typeof Model, conn: WebSQLAdapter){
-    super(model, conn);
+  constructor(model: typeof Model, adapter: WebSQLAdapter){
+    this.Model = model;
+    this.adapter = adapter;
   }
 
   distinct(flag: boolean = true) : WebSQLSelect {
@@ -149,7 +152,7 @@ export class WebSQLSelect extends Query implements Select{
   public async execute(): Promise<SQLResultSet> {
 
     let sql: string = this.render();
-    return this.conn.query(sql, this._params);
+    return this.adapter.query(sql, this._params);
   }
 
   public async all() : Promise<Model[]> {

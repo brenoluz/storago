@@ -1,6 +1,7 @@
 import { Adapter, engineKind } from "../adapter";
 import { WebSQLSelect } from "./select";
 import { Model } from "../../model";
+import { WebSQLInsert } from "./insert";
 
 export class WebSQLAdapter implements Adapter{
 
@@ -20,6 +21,11 @@ export class WebSQLAdapter implements Adapter{
   public select(table: typeof Model) : WebSQLSelect {
     let select = new WebSQLSelect(table, this);
     return select;
+  }
+
+  public insert(model: typeof Model) : WebSQLInsert {
+    let insert = new WebSQLInsert(model, this);
+    return insert;
   }
 
   public async query(sql: DOMString, data?: ObjectArray) : Promise<SQLResultSet> {

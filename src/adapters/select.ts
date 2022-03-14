@@ -1,4 +1,4 @@
-export type paramsType = string|number;
+import { paramsType } from "./query";
 
 export interface Select{
 
