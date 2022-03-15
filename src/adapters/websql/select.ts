@@ -33,7 +33,7 @@ export class WebSQLSelect implements Select{
     return this;
   }
 
-  from(from: string, columns?: paramsType[]) : WebSQLSelect {
+  from(from: string, columns?: string[]) : WebSQLSelect {
 
     this._from = from;
     if(!columns){

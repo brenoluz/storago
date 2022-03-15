@@ -1,13 +1,30 @@
 import { Schema } from './schema';
-import { Select, paramsType } from './adapters/select';
+import { Select } from './adapters/select';
+import { paramsType } from './adapters/query';
 
 export class Model {
 
   public static schema: Schema;
+  protected __new: Boolean = true;
+  protected __data?: object;
   [key: string]: any;
 
-  public save(): Promise<number> {
+  public static insert() : any{
 
+    let query = this.schema.insert()
+  }
+
+  public async save(): Promise<any> {
+
+    let schema: Schema = Object.getPrototypeOf(this).constructor.schema;
+
+    if(this._data == undefined){
+      let insert = schema.insert();
+      insert.add(this);
+
+    }
+
+    return Promise.resolve(1);
   }
 
   public static find(where: string, param: paramsType): Promise<any[]> {
@@ -19,7 +36,7 @@ export class Model {
 
   public static select(): Select {
 
-    return this.schema.select(this);
+    return this.schema.select();
   }
 
   public static createFromDB(row: { [index: string]: any; }): Model {

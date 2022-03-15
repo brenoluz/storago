@@ -1,7 +1,17 @@
 import { Create } from "../create";
+import { Model } from '../../model';
+import { WebSQLAdapter } from './adapter';
 
-export class CreateWebSQL extends Create{
+export class CreateWebSQL implements Create{
+
+  private Model: typeof Model;
+  private adapter: WebSQLAdapter;
  
+  constructor(model: typeof Model, adapter: WebSQLAdapter){
+    this.Model = model;
+    this.adapter = adapter;
+  }
+
   private getColumns() : string[] {
 
     const columns: string[] = [];
@@ -9,7 +19,7 @@ export class CreateWebSQL extends Create{
 
     for(let field of fields){
       let name = field.getName();
-      columns.push(`${name} ${field.castDB(this.conn)}`);
+      columns.push(`${name} ${field.castDB(this.adapter)}`);
     }
 
     return columns;
@@ -27,6 +37,6 @@ export class CreateWebSQL extends Create{
   public execute() : Promise<SQLResultSet> {
 
     let sql: string = this.render();
-    return this.conn.query(sql);
+    return this.adapter.query(sql);
   }
 }

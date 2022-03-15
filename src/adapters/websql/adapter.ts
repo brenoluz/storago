@@ -13,7 +13,7 @@ export class WebSQLAdapter implements Adapter{
     this.db = window.openDatabase(name, '', description, size);
   }
 
-  public async transaction() : Promise<SQLTransaction>{
+  public async getTransaction() : Promise<SQLTransaction>{
 
     return new Promise(this.db.transaction);
   }
@@ -30,7 +30,7 @@ export class WebSQLAdapter implements Adapter{
 
   public async query(sql: DOMString, data?: ObjectArray) : Promise<SQLResultSet> {
 
-    let tx : SQLTransaction = await this.transaction();
+    let tx : SQLTransaction = await this.getTransaction();
 
     return new Promise((resolve, reject) => {
 

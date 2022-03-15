@@ -1,6 +1,3 @@
-import { Query } from './query';
+export interface Create{
 
-export abstract class Create extends Query{
-
-  abstract execute() : Promise<any>;
 }

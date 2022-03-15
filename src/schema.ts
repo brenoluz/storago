@@ -9,13 +9,15 @@ export class Schema{
 
   private name: string;
   private fields: Field[];
-  private conn: Adapter;
+  private adapter: Adapter;
+  protected Model: typeof Model;
 
-  constructor(name: string, fields: Field[], adapter: Adapter = session.adapter){
+  constructor(model: typeof Model, name: string, fields: Field[], adapter: Adapter = session.adapter){
 
     this.name = name;
     this.fields = fields;
-    this.conn = adapter;
+    this.adapter = adapter;
+    this.Model = model;
   }
 
   public getName() : string {
@@ -24,6 +26,19 @@ export class Schema{
 
   public getFields() : Field[] {
     return this.fields;
+  }
+
+  public getRealFields() : Field[]{
+
+    let fieldFiltred: Field[] = [];
+    for(let field of this.fields){
+
+      if(!field.isVirtual()){
+        fieldFiltred.push(field);
+      }
+    }
+
+    return fieldFiltred;
   }
 
   public getColumns() : string[] {
@@ -40,19 +55,17 @@ export class Schema{
   }
 
   public getAdapter() : Adapter {
-    return this.conn;
+    return this.adapter;
   }
 
-  public select(model: typeof Model) : Select {
-    let select: Select = this.conn.select(model);
-    select.from(this.name, this.getColumns());
+  public select() : Select {
+    let select: Select = this.adapter.select(this.Model);
     return select;
   }
 
-  public insert(model: typeof Model) : Insert{
+  public insert() : Insert{
 
-    let insert: Insert = this.conn.insert(model);
-    insert.from(this.name, this.getColumns());
+    let insert: Insert = this.adapter.insert(this.Model);
     return insert;
   }
 }

@@ -1,8 +1,8 @@
-import { paramsType } from "./query";
+import { Model } from "../model";
 
 export interface Insert{
 
-  from(from: string, columns?: string[]) : Insert;
-  execute() : Promise<any>;
   render() : string;
+  execute() : Promise<any>;
+  add(row: Model): void;
 }
