@@ -1,15 +1,16 @@
 import { Insert } from "../insert";
 import { WebSQLAdapter } from "./adapter";
 import { Model } from "../../model";
+import { debug } from "../../debug";
 
 export type dbValueCast = string | number;
 
 export class WebSQLInsert implements Insert {
 
-  private Model: typeof Model;
-  private adapter: WebSQLAdapter;
-  private values: dbValueCast[] = [];
-  private objects: Model[] = [];
+  protected Model: typeof Model;
+  protected adapter: WebSQLAdapter;
+  protected values: dbValueCast[] = [];
+  protected objects: Model[] = [];
 
   constructor(model: typeof Model, adapter: WebSQLAdapter) {
     this.Model = model;
@@ -47,6 +48,8 @@ export class WebSQLInsert implements Insert {
       let o_index = parseInt(o);
       let obj = this.objects[o];
 
+      sql += '(';
+
       for (let i in fields) {
 
         let index = parseInt(i);
@@ -63,10 +66,12 @@ export class WebSQLInsert implements Insert {
 
       if (o_index < o_size) {
         sql += '), ';
+      }else{
+        sql += ')';
       }
     }
 
-    sql += ')';
+    sql += ');';
 
     return sql;
   }
@@ -74,6 +79,17 @@ export class WebSQLInsert implements Insert {
   public async execute(): Promise<SQLResultSet> {
 
     let sql = this.render();
+    if(debug.insert){
+      console.log(sql, this.values);
+    }
+    
+
     return this.adapter.query(sql, this.values);
+  }
+
+  public async save() : Promise<void>{
+
+    let result = await this.execute();
+    console.log('result', result);
   }
 }

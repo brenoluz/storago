@@ -15,7 +15,9 @@ export class WebSQLAdapter implements Adapter{
 
   public async getTransaction() : Promise<SQLTransaction>{
 
-    return new Promise(this.db.transaction);
+    return new Promise((resolve, reject) => {
+      this.db.transaction(resolve, reject);
+    });
   }
 
   public select(table: typeof Model) : WebSQLSelect {

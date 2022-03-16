@@ -1,6 +1,10 @@
 import { Adapter, engineKind } from "../adapters/adapter";
 import { Field } from "./field";
 
+interface IData {                                                                                                                               
+  [prop: string]: string;                                                      
+}  
+
 export class Text extends Field{
 
   public fromDB(value: any) : any {

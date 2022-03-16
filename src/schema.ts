@@ -65,7 +65,7 @@ export class Schema{
 
   public insert() : Insert{
 
-    let insert: Insert = this.adapter.insert(this.Model);
+    let insert: Insert = this.adapter.insert(this.Model);    
     return insert;
   }
 }

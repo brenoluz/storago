@@ -1,4 +1,5 @@
 import { Adapter } from "../adapters/adapter";
+import { Model } from "../model";
 
 export type config = {
   default?: any;
