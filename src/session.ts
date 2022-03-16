@@ -12,3 +12,7 @@ export const session: Defaults = {
 export function setDefaultAdapter(adapter: Adapter){
   session.adapter = adapter;
 }
+
+export function getDefaultAdapter() : Adapter {
+  return this.adapter;
+}

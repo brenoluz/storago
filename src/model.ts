@@ -14,7 +14,6 @@ export class Model {
 
   [prop: string]: any;
 
-
   public async save(): Promise<any> {
 
     let schema: Schema = Object.getPrototypeOf(this).constructor.schema;
