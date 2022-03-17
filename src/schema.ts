@@ -4,6 +4,7 @@ import { Insert } from "./adapters/insert";
 import { Model } from "./model";
 import { Field } from "./field/field";
 import { session } from './session';
+import { Create } from "./adapters/create";
 
 export class Schema{
 
@@ -18,6 +19,11 @@ export class Schema{
     this.fields = fields;
     this.adapter = adapter;
     this.Model = model;
+  }
+
+  public create() : Create{
+
+    return this.adapter.create(this.Model);
   }
 
   public getName() : string {

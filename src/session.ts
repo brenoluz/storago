@@ -14,5 +14,5 @@ export function setDefaultAdapter(adapter: Adapter){
 }
 
 export function getDefaultAdapter() : Adapter {
-  return this.adapter;
+  return session.adapter;
 }

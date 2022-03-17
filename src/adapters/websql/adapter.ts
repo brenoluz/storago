@@ -1,7 +1,9 @@
 import { Adapter, engineKind } from "../adapter";
-import { WebSQLSelect } from "./select";
 import { Model } from "../../model";
+import { WebSQLSelect } from "./select";
 import { WebSQLInsert } from "./insert";
+import { WebSQLCreate } from "./create";
+import { debug } from "../../debug";
 
 type callbackMigration = {(transaction: SQLTransaction) : Promise<void>};
 
@@ -50,12 +52,24 @@ export class WebSQLAdapter implements Adapter {
     return insert;
   }
 
-  public async query(sql: DOMString, data?: ObjectArray): Promise<SQLResultSet> {
+  public create(model: typeof Model) : WebSQLCreate {
 
-    let tx: SQLTransaction = await this.getTransaction();
+    let create = new WebSQLCreate(model, this);
+    return create;
+  }
 
-    return new Promise((resolve, reject) => {
+  public query(sql: DOMString, data: ObjectArray = [], tx?: SQLTransaction): Promise<SQLResultSet> {
 
+    return new Promise(async (resolve, reject) => {
+
+      if(tx === undefined){
+        tx = await this.getTransaction();
+      }
+
+      if(debug.query){
+        console.log('@storago/orm', 'query', sql, data);
+      }
+      
       tx.executeSql(sql, data, (tx: SQLTransaction, result: SQLResultSet): void => {
 
         resolve(result);

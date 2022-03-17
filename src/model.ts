@@ -1,10 +1,11 @@
 import { Schema } from './schema';
 import { Select } from './adapters/select';
 import { paramsType } from './adapters/query';
+import { Create } from './adapters/create';
 
-interface IData {                                                                                                                               
-  [prop: string]: any;                                                      
-}  
+interface IData {
+  [prop: string]: any;
+}
 
 export class Model {
 
@@ -18,7 +19,7 @@ export class Model {
 
     let schema: Schema = Object.getPrototypeOf(this).constructor.schema;
 
-    if(this.__data === undefined){
+    if (this.__data === undefined) {
       let insert = schema.insert();
       insert.add(this);
       return insert.save();
@@ -39,7 +40,11 @@ export class Model {
     return this.schema.select();
   }
 
-  
+  public static create(): Create {
+
+    return this.schema.create();
+  }
+
   public static createFromDB(row: { [index: string]: any; }): Model {
 
     let instance = new this;
@@ -49,5 +54,5 @@ export class Model {
 
     return instance;
   }
-  
+
 }

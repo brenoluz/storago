@@ -2,7 +2,7 @@ import { Create } from "../create";
 import { Model } from '../../model';
 import { WebSQLAdapter } from './adapter';
 
-export class CreateWebSQL implements Create{
+export class WebSQLCreate implements Create{
 
   private Model: typeof Model;
   private adapter: WebSQLAdapter;
@@ -15,7 +15,7 @@ export class CreateWebSQL implements Create{
   private getColumns() : string[] {
 
     const columns: string[] = [];
-    let fields = this.Model.schema.getFields();
+    let fields = this.Model.schema.getRealFields();
 
     for(let field of fields){
       let name = field.getName();
@@ -34,9 +34,9 @@ export class CreateWebSQL implements Create{
     return sql;
   }
 
-  public execute() : Promise<SQLResultSet> {
+  public execute(tx: SQLTransaction) : Promise<SQLResultSet> {
 
     let sql: string = this.render();
-    return this.adapter.query(sql);
+    return this.adapter.query(sql, [], tx);
   }
 }
