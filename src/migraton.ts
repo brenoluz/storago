@@ -1,12 +1,12 @@
 import { Adapter } from "./adapters/adapter";
 
-type taskCallback = {() : Promise<void>};
+type taskCallback = {(transaction: SQLTransaction) : Promise<void>};
 
 interface taskVersion {
   [version: number]: taskCallback;
 };
 
-export abstract class Migration{
+export class Migration{
 
   protected adapter: Adapter;
   private tasks: taskVersion = {};
@@ -14,10 +14,37 @@ export abstract class Migration{
 
   constructor(adapter: Adapter){
     this.adapter = adapter;
+  }
 
-    this.tasks[1] = (): Promise<void> => {
-      return Promise.resolve();
+  protected async make() : Promise<void>{
+    return Promise.resolve();
+  }
+
+  public async run() : Promise<void>{
+
+    await this.make();
+
+    if(this.firstAccess === undefined){
+      throw {code: null, message: `FirstAccess Migration not implemented!`};
     }
+
+    let version = this.adapter.getVersion();
+    if(version === ''){
+      return this.adapter.changeVersion(0, this.firstAccess);
+    }
+
+    while(true){
+
+      version++;
+      let task = this.tasks[version];
+      if(task === undefined){
+        break;
+      }
+
+      await this.adapter.changeVersion(version, task);
+    }
+
+    return Promise.resolve();
   }
 
   protected registerFirstAccess(callback: taskCallback) : void{

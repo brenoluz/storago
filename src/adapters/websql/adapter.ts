@@ -3,36 +3,56 @@ import { WebSQLSelect } from "./select";
 import { Model } from "../../model";
 import { WebSQLInsert } from "./insert";
 
-export class WebSQLAdapter implements Adapter{
+type callbackMigration = {(transaction: SQLTransaction) : Promise<void>};
 
-  db: Database;
-  engine: engineKind = engineKind.WebSQL;
+export class WebSQLAdapter implements Adapter {
 
-  constructor(name: string, description: string, size: number){
+  public readonly db: Database;
+  public readonly engine: engineKind = engineKind.WebSQL;
+
+  constructor(name: string, description: string, size: number) {
 
     this.db = window.openDatabase(name, '', description, size);
   }
 
-  public async getTransaction() : Promise<SQLTransaction>{
+  public getVersion(): ''|number {
+
+    let version = this.db.version as string;
+    if (version !== '') {
+      return parseInt(version);
+    }
+    
+    return '';
+  }
+
+  public changeVersion(newVersion: number, cb: callbackMigration) : Promise<void>{
+
+    return new Promise((resolve, reject) => {
+
+      this.db.changeVersion(String(this.getVersion()), String(newVersion), cb, reject, resolve);
+    });
+  }
+
+  public async getTransaction(): Promise<SQLTransaction> {
 
     return new Promise((resolve, reject) => {
       this.db.transaction(resolve, reject);
     });
   }
 
-  public select(table: typeof Model) : WebSQLSelect {
+  public select(table: typeof Model): WebSQLSelect {
     let select = new WebSQLSelect(table, this);
     return select;
   }
 
-  public insert(model: typeof Model) : WebSQLInsert {
+  public insert(model: typeof Model): WebSQLInsert {
     let insert = new WebSQLInsert(model, this);
     return insert;
   }
 
-  public async query(sql: DOMString, data?: ObjectArray) : Promise<SQLResultSet> {
+  public async query(sql: DOMString, data?: ObjectArray): Promise<SQLResultSet> {
 
-    let tx : SQLTransaction = await this.getTransaction();
+    let tx: SQLTransaction = await this.getTransaction();
 
     return new Promise((resolve, reject) => {
 
