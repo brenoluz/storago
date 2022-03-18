@@ -18,7 +18,7 @@ export class Model {
 
     let schema: Schema = Object.getPrototypeOf(this).constructor.schema;
 
-    if (this.__data === undefined) {
+    if (Object.keys(this.__data).length === 0) {
       let insert = schema.insert();
       insert.add(this);
       return insert.save();
