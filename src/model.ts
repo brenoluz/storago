@@ -3,15 +3,14 @@ import { Select } from './adapters/select';
 import { paramsType } from './adapters/query';
 import { Create } from './adapters/create';
 
-interface IData {
-  [prop: string]: any;
+interface Populate {
+  [name: string]: Promise<any>;
 }
 
 export class Model {
 
   public static schema: Schema;
-  protected __new: Boolean = true;
-  protected __data?: IData;
+  public __data: Populate = {};
 
   [prop: string]: any;
 
@@ -43,16 +42,6 @@ export class Model {
   public static create(): Create {
 
     return this.schema.create();
-  }
-
-  public static createFromDB(row: { [index: string]: any; }): Model {
-
-    let instance = new this;
-    for (let a in row) {
-      //instance[a] = row[a];
-    }
-
-    return instance;
   }
 
 }

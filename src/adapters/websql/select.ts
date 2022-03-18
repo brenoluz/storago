@@ -155,16 +155,24 @@ export class WebSQLSelect implements Select{
     return this.adapter.query(sql, this._params);
   }
 
+  public static createFromDB(row: { [index: string]: any; }): Model {
+
+    let model = new Model();
+    
+
+    return model;
+  }
+
   public async all() : Promise<Model[]> {
 
-    let rowset: Model[] = [];
+    let rowset: Promise<Model>[] = [];
     let result = await this.execute();
 
     for(let i = 0; result.rows.length > i; i++){
       let row = result.rows.item(i);
-      rowset.push(this.Model.createFromDB(row));
+      rowset.push(this.Model.schema.populateFromDB(row));
     }
 
-    return rowset;
+    return Promise.all(rowset);
   }
 }

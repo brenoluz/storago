@@ -54,9 +54,8 @@ export class WebSQLInsert implements Insert {
 
         let index = parseInt(i);
         let field = fields[i];
-        let name = field.getName();
 
-        this.values.push(field.toDB(obj[name])); //guarda os valores para gravar no banco
+        this.values.push(field.toDB(obj)); //guarda os valores para gravar no banco
 
         sql += '?';
         if (index < length) {
