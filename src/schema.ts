@@ -66,6 +66,7 @@ export class Schema {
 
   public select(): Select {
     let select: Select = this.adapter.select(this.Model);
+    select.from(this.getName(), this.getColumns());
     return select;
   }
 
@@ -79,16 +80,21 @@ export class Schema {
 
     let promises: Promise<any>[] = [];
     let fields = this.getFields();
+    let keys: string[] = [];
   
     for (let field of fields) {
       let name = field.getName();
       let promisePopulate = field.popule(model, row);
       model.__data[name] = promisePopulate;
       promises.push(promisePopulate);
+      keys.push(name);
     }
 
     let data = await Promise.all(promises);
-    Object.assign(model, data);
+    for(let k in keys){
+      let name = keys[k];
+      model[name] = data[k];
+    }
 
     return model;
   }

@@ -2,6 +2,7 @@ import { WebSQLAdapter } from './adapter';
 import { Select } from '../select';
 import { Model } from '../../model';
 import { paramsType } from '../query';
+import { debug } from '../../debug';
 
 type whereTuple = [string, paramsType[]|undefined];
 type joinTuple = [string, string];
@@ -101,13 +102,13 @@ export class WebSQLSelect implements Select{
       this.from(this.Table.schema.name);
     }*/
 
-    let sql = 'SELECT';
+    let sql = 'SELECT ';
     if(this._distinct){
-      sql += ' DISTINCT';
+      sql += 'DISTINCT ';
     }
 
-    sql += this._column.join(' ,');
-    sql += this._from;
+    sql += this._column.join(', ');
+    sql += ` FROM ${this._from}`;
 
     //join
     if(this._join.length > 0){
@@ -142,6 +143,7 @@ export class WebSQLSelect implements Select{
     }
 
     sql += this._order.join(' ');
+    sql += ';';
     return sql;
   }
 
@@ -155,24 +157,21 @@ export class WebSQLSelect implements Select{
     return this.adapter.query(sql, this._params);
   }
 
-  public static createFromDB(row: { [index: string]: any; }): Model {
-
-    let model = new Model();
-    
-
-    return model;
-  }
-
   public async all() : Promise<Model[]> {
 
-    let rowset: Promise<Model>[] = [];
+    let promises: Promise<Model>[] = [];
     let result = await this.execute();
 
     for(let i = 0; result.rows.length > i; i++){
       let row = result.rows.item(i);
-      rowset.push(this.Model.schema.populateFromDB(row));
+      promises.push(this.Model.schema.populateFromDB(row));
     }
 
-    return Promise.all(rowset);
+    let rowset = await Promise.all(promises);
+    if(debug.select){
+      console.log('@storago/orm', 'select:rowset', rowset);
+    }
+
+    return rowset;
   }
 }
