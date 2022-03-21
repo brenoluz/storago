@@ -27,11 +27,11 @@ export class Model {
     return Promise.resolve(1);
   }
 
-  public static find(where: string, param: paramsType): Promise<any[]> {
+  public static find(where: string, param: paramsType): Promise<Model|undefined> {
 
     let select: Select = this.select();
-    select.where(`${ where } = ?`, param);
-    return select.all();
+    select.where(where, param);
+    return select.one();
   };
 
   public static select(): Select {

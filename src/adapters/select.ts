@@ -7,5 +7,6 @@ export interface Select{
   execute() : Promise<any>;
   where(criteria: string, params?: paramsType[] | paramsType) : Select;
   all() : Promise<Model[]>;
+  one() : Promise<Model|undefined>;
   render() : string;
 }
