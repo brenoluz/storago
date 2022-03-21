@@ -6,6 +6,7 @@ export type config = {
   required?: boolean;
   link?: string;
   index?: boolean;
+  primary?: boolean;
 }
 
 export abstract class Field{
@@ -21,6 +22,21 @@ export abstract class Field{
 
   public getName() : string {
     return this.name;
+  }
+
+  public getDefaultValue() : any {
+    
+    let dfalt = this.config.default;
+
+    if(dfalt === undefined){
+      return undefined;
+    }
+
+    if(typeof dfalt === 'function'){
+      return dfalt();
+    }
+
+    return dfalt;
   }
 
   public isVirtual() : boolean{
@@ -64,7 +80,22 @@ export abstract class Field{
     return this.fromDB(value);
   }
 
-  abstract toDB(model: Model) : any;
+  public toDB(model: Model) : any {
+
+    let name = this.getName();
+    let value = model[name];
+
+    if(value === undefined){
+      value = this.getDefaultValue();
+    }
+
+    if(value === undefined){
+      value = null;
+    }
+
+    return value;
+  };
+
   abstract fromDB(value: any) : any;
   abstract castDB(adapter: Adapter) : string;
 }

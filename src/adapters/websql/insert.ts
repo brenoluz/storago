@@ -40,7 +40,7 @@ export class WebSQLInsert implements Insert {
       }
     }
 
-    sql += ') VALUES (';
+    sql += ') VALUES';
 
     let o_size = this.objects.length - 1;
     for (let o in this.objects) {
@@ -48,7 +48,7 @@ export class WebSQLInsert implements Insert {
       let o_index = parseInt(o);
       let obj = this.objects[o];
 
-      sql += '(';
+      sql += ' (';
 
       for (let i in fields) {
 
@@ -62,15 +62,15 @@ export class WebSQLInsert implements Insert {
           sql += ', ';
         }
       }
+      
+      sql += ')';
 
       if (o_index < o_size) {
-        sql += '), ';
-      }else{
-        sql += ')';
+        sql += ', ';
       }
     }
 
-    sql += ');';
+    sql += ';';
 
     return sql;
   }
