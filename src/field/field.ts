@@ -1,77 +1,87 @@
 import { Adapter } from "../adapters/adapter";
 import { Model } from "../model";
 
-export type config = {
-  default?: any;
-  required?: boolean;
-  link?: string;
-  index?: boolean;
-  primary?: boolean;
+export enum codeError {
+  'EngineNotImplemented' ='@storago/orm/field/engineNotImplemented',
+  'DefaultValueIsNotValid' = '@storago/orm/field/defaultParamNotValid',
+  'IncorrectValueToDb' = '@storago/orm/field/IncorrectValueToStorageOnDB',
 }
 
-export abstract class Field{
+export interface Config {
+  default?: any;
+  required: boolean;
+  link?: string;
+  index: boolean;
+  primary: boolean;
+}
 
-  protected config: config;
+export const defaultConfig: Config = {
+  required: false,
+  index: false,
+  primary: false
+}
+
+export abstract class Field {
+
+  readonly abstract config: Config;
   protected name: string;
 
-  constructor(name: string, config: config = {}){
-    
+  constructor(name: string){
     this.name = name;
-    this.config = config;
   }
 
-  public getName() : string {
+  public getName(): string {
     return this.name;
   }
 
-  public getDefaultValue() : any {
-    
-    let dfalt = this.config.default;
+  public getDefaultValue(): any {
 
-    if(dfalt === undefined){
+    let valueDefault = this.config.default;
+
+    if (valueDefault === undefined) {
       return undefined;
     }
 
-    if(typeof dfalt === 'function'){
-      return dfalt();
+    if (typeof valueDefault === 'function') {
+      return valueDefault();
     }
 
-    return dfalt;
+    return valueDefault;
   }
 
-  public isVirtual() : boolean{
+  public isVirtual(): boolean {
 
-    if(this.config.link !== undefined && !this.config.index){
+    if (this.config.link !== undefined && !this.config.index) {
       return true;
     }
 
     return false;
   }
 
-  public async popule(model: Model, row: { [index: string]: any; }) : Promise<any> {
+  public async populate(model: Model, row: { [index: string]: any; }): Promise<any> {
 
     let name = this.getName();
     let value = row[name];
 
-    if(this.config.link !== undefined){
-      
-      let links : string[] = this.config.link.split('.');
+    if (this.config.link !== undefined) {
+
+      let links: string[] = this.config.link.split('.');
       let itemName = links.shift();
 
-      if(!itemName  || itemName  in model.__data){
+      if (!itemName || itemName in model.__data) {
         model[name] = undefined;
         return;
       }
 
       value = await model.__data[itemName];
 
-      while(itemName = links.shift()){
+      while (itemName = links.shift()) {
 
-        if(typeof value === 'object'){
-          if(itemName in value){
+        if (typeof value === 'object') {
+          if (itemName in value) {
             value = value[itemName];
           }
-        }else{
+        } else {
           break;
         }
       }
@@ -80,22 +90,22 @@ export abstract class Field{
     return this.fromDB(value);
   }
 
-  public toDB(model: Model) : any {
+  public toDB(model: Model): any {
 
     let name = this.getName();
     let value = model[name];
 
-    if(value === undefined){
+    if (value === undefined) {
       value = this.getDefaultValue();
     }
 
-    if(value === undefined){
+    if (value === undefined) {
       value = null;
     }
 
     return value;
   };
 
-  abstract fromDB(value: any) : any;
-  abstract castDB(adapter: Adapter) : string;
+  abstract fromDB(value: any): any;
+  abstract castDB(adapter: Adapter): string;
 }

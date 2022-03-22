@@ -1,44 +1,60 @@
 import { Model } from "../model";
 import { Adapter, engineKind } from "../adapters/adapter";
-import { Field } from "./field";
+import { Field, Config, defaultConfig, codeError } from "./field";
 
-export class Text extends Field{
+export interface TextConfig extends Config { }
 
-  public fromDB(value: any) : any {
+export class Text extends Field {
 
-    if(typeof value === 'string'){
+  readonly config: TextConfig;
+
+  constructor(name: string, config: Partial<TextConfig> = defaultConfig) {
+
+    super(name);
+    this.config = {
+      ...defaultConfig,
+      ...config,
+    }
+  }
+
+  public fromDB(value: any): any {
+
+    if (typeof value === 'string') {
       return value;
     }
 
-    if('toString' in value){
+    if ('toString' in value) {
       return value.toString();
     }
 
     return undefined;
   }
 
-  public toDB(model: Model) : any {
+  public toDB(model: Model): any {
 
     let name = this.getName();
     let value = model[name];
 
-    if(typeof value === 'string'){
+    if (typeof value === 'string') {
       return value.trim();
     }
 
-    if('toString' in value){
+    if ('toString' in value) {
       return value.toString();
     }
 
     return null;
   }
 
-  public castDB(conn: Adapter): string {
-    
-    if(conn.engine == engineKind.PostgreSQL){
-      return 'VARCHAR';
+  public castDB(adapter: Adapter): string {
+
+    if (adapter.engine == engineKind.WebSQL) {
+      return 'TEXT';
     }
 
-    return 'TEXT';
+    throw {
+      code: codeError.EngineNotImplemented,
+      message: `Engine ${ adapter.engine } not implemented on field Text`
+    };
   }
 }
