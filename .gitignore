@@ -2,3 +2,4 @@ node_modules/
 .tsbuild/
 /test/server/bundle.js
 package-lock.json
+dist/types
