@@ -8,9 +8,9 @@ import { Create } from "./adapters/create";
 
 export class Schema {
 
-  private name: string;
-  private fields: Field[];
-  private adapter: Adapter;
+  protected name: string;
+  protected fields: Field[];
+  protected adapter: Adapter;
   protected Model: typeof Model;
 
   constructor(model: typeof Model, name: string, fields: Field[], adapter: Adapter = session.adapter) {
@@ -36,15 +36,15 @@ export class Schema {
 
   public getRealFields(): Field[] {
 
-    let fieldFiltred: Field[] = [];
+    let fieldFiltered: Field[] = [];
     for (let field of this.fields) {
 
       if (!field.isVirtual()) {
-        fieldFiltred.push(field);
+        fieldFiltered.push(field);
       }
     }
 
-    return fieldFiltred;
+    return fieldFiltered;
   }
 
   public getColumns(): string[] {
@@ -84,7 +84,7 @@ export class Schema {
   
     for (let field of fields) {
       let name = field.getName();
-      let promisePopulate = field.popule(model, row);
+      let promisePopulate = field.populate(model, row);
       model.__data[name] = promisePopulate;
       promises.push(promisePopulate);
       keys.push(name);

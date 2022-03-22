@@ -45,7 +45,7 @@ export class Json extends Field {
 
   public fromDB(value: any) {
 
-    if (value === undefined || value.trim() === '') {
+    if (value === undefined || value === '') {
       let kind = this.config.type;
       if (kind === 'object') {
         return {};
@@ -67,9 +67,14 @@ export class Json extends Field {
     };
   }
 
-  public toDB(model: Model) : string {
+  public toDB(model: Model) : string|null {
 
     let value = super.toDB(model);
+
+    if(value === null){
+      return null;
+    }
+
     return this.stringifyToDb(value);
   }
 

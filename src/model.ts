@@ -9,7 +9,7 @@ interface Populate {
 
 export class Model {
 
-  public static schema: Schema;
+  public static readonly schema: Schema;
   public __data: Populate = {};
 
   [prop: string]: any;
