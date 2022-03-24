@@ -1,8 +1,9 @@
 import { Adapter } from "../adapters/adapter";
 import { Model } from "../model";
+import { Schema } from "../schema";
 
 export enum codeError {
-  'EngineNotImplemented' ='@storago/orm/field/engineNotImplemented',
+  'EngineNotImplemented' = '@storago/orm/field/engineNotImplemented',
   'DefaultValueIsNotValid' = '@storago/orm/field/defaultParamNotValid',
   'IncorrectValueToDb' = '@storago/orm/field/IncorrectValueToStorageOnDB',
 }
@@ -24,9 +25,9 @@ export const defaultConfig: Config = {
 export abstract class Field {
 
   readonly abstract config: Config;
-  protected name: string;
+  readonly name: string;
 
-  constructor(name: string){
+  constructor(name: string) {
     this.name = name;
   }
 
@@ -105,6 +106,78 @@ export abstract class Field {
 
     return value;
   };
+  
+  public isJsonObject(): boolean {
+    return false;
+  }
+  
+  protected defineSetter(link: string, schema: Schema, model: Model, value: any) : void {
+
+    if (link) {
+      let listName = link.split('.');
+      let fieldName = listName[0];
+      let target = listName.pop();
+      let field = schema.getField(fieldName);
+      let item : any = model;
+      
+      if(field.isJsonObject()){
+        let itemName = listName.shift();
+        while(itemName){
+          
+          if(typeof item[itemName] !== 'object'){
+            item[itemName] = {};
+          }
+          
+          item = item[itemName];
+          itemName = listName.shift();
+        }
+      }
+      
+      if(target){
+        item[target] = value;
+      }
+    }
+  }
+
+  public defineGetter(link: string, schema: Schema, model: Model) : any {
+
+    if (link) {
+      let listName = link.split('.');
+      let fieldName = listName[0];
+      let target = listName.pop();
+      let field = schema.getField(fieldName);
+      let item : any = model;
+
+      if(field.isJsonObject()){
+        let itemName = listName.shift();
+        while(itemName){
+          
+          if(typeof item[itemName] !== 'object'){
+            return item[itemName];
+          }
+          
+          item = item[itemName];
+          itemName = listName.shift();
+        }
+      }
+      
+      if(target){
+        return item[target];
+      }
+    }
+  }
+  
+  public defineProperty(schema: Schema, model: Model): void {
+    
+    
+    let link = this.config.link;
+    if (link) {
+      Object.defineProperty(model, this.name, {
+        'set': this.defineSetter.bind(this, link, schema, model),
+        'get': this.defineGetter.bind(this, link, schema, model),
+      });
+    }
+  }
 
   abstract fromDB(value: any): any;
   abstract castDB(adapter: Adapter): string;

@@ -23,10 +23,6 @@ export class Text extends Field {
       return value;
     }
 
-    if ('toString' in value) {
-      return value.toString();
-    }
-
     return undefined;
   }
 

@@ -53,6 +53,8 @@ export class Json extends Field {
         return [];
       }
     }
+
+    return JSON.parse(value);
   }
 
   public castDB(adapter: Adapter): string {
@@ -67,11 +69,19 @@ export class Json extends Field {
     };
   }
 
-  public toDB(model: Model) : string|null {
+  public isJsonObject(): boolean {
+    if (this.config.type === 'object') {
+      return true;
+    }
+
+    return false;
+  }
+
+  public toDB(model: Model): string | null {
 
     let value = super.toDB(model);
 
-    if(value === null){
+    if (value === null) {
       return null;
     }
 

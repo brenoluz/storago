@@ -34,6 +34,17 @@ export class Schema {
     return this.fields;
   }
 
+  public getField(name: string) : Field {
+
+    for(let field of this.getFields()){
+      if(name == field.getName()){
+        return field;
+      }
+    }
+
+    throw {code: null, message: `Field with name: ${name} not exists in ${this.name}`};
+  }
+
   public getRealFields(): Field[] {
 
     let fieldFiltered: Field[] = [];
@@ -79,7 +90,7 @@ export class Schema {
   public async populateFromDB(row: { [index: string]: any; }, model: Model = new this.Model()): Promise<Model> {
 
     let promises: Promise<any>[] = [];
-    let fields = this.getFields();
+    let fields = this.getRealFields();
     let keys: string[] = [];
   
     for (let field of fields) {
@@ -98,4 +109,11 @@ export class Schema {
 
     return model;
   }
+
+  public defineProperties(model: Model) : void {
+
+    for(let field of this.getFields()){
+      field.defineProperty(this, model);
+    }
+  } 
 }
