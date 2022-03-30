@@ -6,6 +6,7 @@ export enum codeError {
   'EngineNotImplemented' = '@storago/orm/field/engineNotImplemented',
   'DefaultValueIsNotValid' = '@storago/orm/field/defaultParamNotValid',
   'IncorrectValueToDb' = '@storago/orm/field/IncorrectValueToStorageOnDB',
+  'RefererNotFound' = '@storago/orm/field/ManyRelationship',
 }
 
 export interface Config {
@@ -64,6 +65,7 @@ export abstract class Field {
     let name = this.getName();
     let value = row[name];
 
+    /*
     if (this.config.link !== undefined) {
 
       let links: string[] = this.config.link.split('.');
@@ -87,22 +89,29 @@ export abstract class Field {
         }
       }
     }
+    */
 
     return this.fromDB(value);
+  }
+
+  public parseToDB(value: any) : any {
+
+    if (value === undefined) {
+      value = this.getDefaultValue();
+    }
+  
+    if (value === undefined) {
+      value = null;
+    }
+
+    return value;
   }
 
   public toDB(model: Model): any {
 
     let name = this.getName();
     let value = model[name];
-
-    if (value === undefined) {
-      value = this.getDefaultValue();
-    }
-
-    if (value === undefined) {
-      value = null;
-    }
+    value = this.parseToDB(value);
 
     return value;
   };
@@ -134,7 +143,7 @@ export abstract class Field {
       }
       
       if(target){
-        item[target] = value;
+        item[target] = this.parseToDB(value);
       }
     }
   }

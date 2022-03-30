@@ -5,6 +5,7 @@ import { Model } from "./model";
 import { Field } from "./field/field";
 import { session } from './session';
 import { Create } from "./adapters/create";
+import { UUID } from "./field/uuid";
 
 export class Schema {
 
@@ -19,6 +20,8 @@ export class Schema {
     this.fields = fields;
     this.adapter = adapter;
     this.Model = model;
+
+    this.fields.push(new UUID('id', {primary: true}));
   }
 
   public create(): Create {
