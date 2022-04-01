@@ -20,17 +20,17 @@ export class Model {
     schema.defineProperties(this);
   }
 
-  public async save(): Promise<any> {
+  public async save(): Promise<Model> {
 
     let schema: Schema = Object.getPrototypeOf(this).constructor.schema;
 
     if (Object.keys(this.__data).length === 0) {
       let insert = schema.insert();
       insert.add(this);
-      return insert.save();
+      await insert.save();
     }
 
-    return Promise.resolve(1);
+    return Promise.resolve(this);
   }
 
   public static find(where: string, param: paramsType): Promise<Model|undefined> {
