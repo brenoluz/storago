@@ -18,6 +18,7 @@ export class Many extends UUID{
     }
   }
 
+  /*
   public defineProperty(schema: Schema, model: Model): void {
     
     let column = this.getName();
@@ -43,4 +44,5 @@ export class Many extends UUID{
       return Promise.resolve();
     }
   }
+  */
 }

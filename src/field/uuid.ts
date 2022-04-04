@@ -26,9 +26,17 @@ export class UUID extends Field {
       message: `Engine ${adapter.engine} not implemented on Field UUID`};
   }
 
-  public fromDB(value: any) {
+  public fromDB(value: any) : string|undefined {
+
+    if(value === null){
+      return undefined;
+    }
+
+    if(typeof value === 'string'){
+      return value;
+    }
     
-    return value;
+    throw {code: null, message: 'value from DB is not a valid uuid'};
   }
 
   public getDefaultValue() : any {
@@ -42,7 +50,7 @@ export class UUID extends Field {
     return value;
   }
 
-  public toDB(model: Model) : any {
+  public toDB<T extends Model>(model: T) : string|null {
 
     let value = super.toDB(model);
     return value;

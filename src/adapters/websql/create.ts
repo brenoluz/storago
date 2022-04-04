@@ -1,21 +1,24 @@
 import { Create } from "../create";
 import { Model } from '../../model';
 import { WebSQLAdapter } from './adapter';
+import { Schema } from "../../schema";
 
-export class WebSQLCreate implements Create{
+export class WebSQLCreate<M extends Model> implements Create{
 
-  private Model: typeof Model;
+  private Model: new() => M;
   private adapter: WebSQLAdapter;
+  private schema: Schema<M>;
  
-  constructor(model: typeof Model, adapter: WebSQLAdapter){
+  constructor(model: new() => M, schema: Schema<M>, adapter: WebSQLAdapter){
     this.Model = model;
     this.adapter = adapter;
+    this.schema = schema;
   }
 
   private getColumns() : string[] {
 
     const columns: string[] = [];
-    let fields = this.Model.schema.getRealFields();
+    let fields = this.schema.getRealFields();
 
     for(let field of fields){
       let name = field.getName();
@@ -28,7 +31,7 @@ export class WebSQLCreate implements Create{
   public render() : string {
 
     let columns: string[] = this.getColumns();
-    let sql = `CREATE TABLE IF NOT EXISTS ${this.Model.schema.getName()} (`;
+    let sql = `CREATE TABLE IF NOT EXISTS ${this.schema.getName()} (`;
     sql += columns.join(', ');
     sql += ');';
     return sql;

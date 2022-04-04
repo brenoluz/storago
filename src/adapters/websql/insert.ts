@@ -2,19 +2,22 @@ import { Insert } from "../insert";
 import { WebSQLAdapter } from "./adapter";
 import { Model } from "../../model";
 import { debug } from "../../debug";
+import { Schema } from "../../schema";
 
 export type dbValueCast = string | number;
 
-export class WebSQLInsert implements Insert {
+export class WebSQLInsert<M extends Model> implements Insert {
 
-  protected Model: typeof Model;
+  protected Model: new() => M;
+  protected schema: Schema<M>;
   protected adapter: WebSQLAdapter;
   protected values: dbValueCast[] = [];
   protected objects: Model[] = [];
 
-  constructor(model: typeof Model, adapter: WebSQLAdapter) {
+  constructor(model: new() => M, schema: Schema<M>, adapter: WebSQLAdapter) {
     this.Model = model;
     this.adapter = adapter;
+    this.schema = schema;
   }
 
   add(row: Model): void {
@@ -24,11 +27,10 @@ export class WebSQLInsert implements Insert {
 
   render(): string {
 
-    let schema = this.Model.schema;
-    let fields = schema.getRealFields();
+    let fields = this.schema.getRealFields();
 
     let length = fields.length - 1;
-    let sql = `INSERT INTO ${ schema.getName() } (`;
+    let sql = `INSERT INTO ${ this.schema.getName() } (`;
     for (let i in fields) {
 
       let index = parseInt(i);

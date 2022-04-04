@@ -2,6 +2,7 @@ import { Select } from "./select";
 import { Model } from "../model";
 import { Insert } from "./insert";
 import { Create } from "./create";
+import { Schema } from "../schema";
 
 type callbackMigration = {(transaction: any) : Promise<void>};
 
@@ -15,9 +16,9 @@ export interface Adapter{
   engine: engineKind;
 
   query(sql: any, data: ObjectArray, transaction: any) : Promise<any>;
-  select(model: typeof Model) : Select;
-  insert(model: typeof Model) : Insert;
+  select<M extends Model>(model: new() => M, schema: Schema<M>) : Select;
+  insert<M extends Model>(model: new() => M, schema: Schema<M>) : Insert;
   getVersion() : ''|number;
-  create(model: typeof Model) : Create;
+  create<M extends Model>(model: new() => M, schema: Schema<M>) : Create;
   changeVersion(newVersion: number, cb: callbackMigration) : Promise<void>;
 }

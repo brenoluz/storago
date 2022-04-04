@@ -41,7 +41,7 @@ export abstract class Field {
     let valueDefault = this.config.default;
 
     if (valueDefault === undefined) {
-      return undefined;
+      return null;
     }
 
     if (typeof valueDefault === 'function') {
@@ -60,6 +60,7 @@ export abstract class Field {
     return false;
   }
 
+  /*
   public async populate(model: Model, row: { [index: string]: any; }): Promise<any> {
 
     let name = this.getName();
@@ -89,29 +90,19 @@ export abstract class Field {
         }
       }
     }
-    */
-
+    
     return this.fromDB(value);
   }
-
-  public parseToDB(value: any) : any {
-
-    if (value === undefined) {
-      value = this.getDefaultValue();
-    }
+  */
   
-    if (value === undefined) {
-      value = null;
-    }
-
-    return value;
-  }
-
-  public toDB(model: Model): any {
+  public toDB<T extends Model>(model: T): any {
 
     let name = this.getName();
-    let value = model[name];
-    value = this.parseToDB(value);
+    let value = model[name as keyof T];
+
+    if(value === undefined){
+      return this.getDefaultValue();
+    }
 
     return value;
   };
@@ -120,6 +111,7 @@ export abstract class Field {
     return false;
   }
   
+  /*
   protected defineSetter(link: string, schema: Schema, model: Model, value: any) : void {
 
     if (link) {
@@ -176,6 +168,7 @@ export abstract class Field {
     }
   }
   
+  
   public defineProperty(schema: Schema, model: Model): void {
     
     
@@ -187,6 +180,7 @@ export abstract class Field {
       });
     }
   }
+  */
 
   abstract fromDB(value: any): any;
   abstract castDB(adapter: Adapter): string;

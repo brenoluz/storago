@@ -9,20 +9,20 @@ interface Populate {
 
 export class Model {
 
-  public static readonly schema: Schema;
+  public static readonly schema: Schema<Model>;
   public __data: Populate = {};
 
-  [prop: string]: any;
+  //[prop: string]: any;
 
   constructor(){
 
-    let schema: Schema = Object.getPrototypeOf(this).constructor.schema;
-    schema.defineProperties(this);
+    let schema = Object.getPrototypeOf(this).constructor.schema;
+    //schema.defineProperties(this);
   }
 
   public async save(): Promise<Model> {
 
-    let schema: Schema = Object.getPrototypeOf(this).constructor.schema;
+    let schema = Object.getPrototypeOf(this).constructor.schema;
 
     if (Object.keys(this.__data).length === 0) {
       let insert = schema.insert();

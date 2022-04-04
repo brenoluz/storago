@@ -3,14 +3,16 @@ import { Select } from '../select';
 import { Model } from '../../model';
 import { paramsType } from '../query';
 import { debug } from '../../debug';
+import { Schema } from '../../schema';
 
 type whereTuple = [string, paramsType[] | undefined];
 type joinTuple = [string, string];
 type orderType = "ASC" | "DESC";
 
-export class WebSQLSelect implements Select {
+export class WebSQLSelect<M extends Model> implements Select {
 
-  private Model: typeof Model;
+  private Model: new() => M;
+  private schema: Schema<M>;
   private adapter: WebSQLAdapter;
   private _offset: number = 0;
   private _distinct: boolean = false;
@@ -23,18 +25,19 @@ export class WebSQLSelect implements Select {
   private _params: paramsType[] = [];
   private _order: string[] = [];
 
-  constructor(model: typeof Model, adapter: WebSQLAdapter) {
+  constructor(model: new() => M, schema: Schema<M>, adapter: WebSQLAdapter) {
     this.Model = model;
     this.adapter = adapter;
+    this.schema = schema;
   }
 
-  distinct(flag: boolean = true): WebSQLSelect {
+  distinct(flag: boolean = true): WebSQLSelect<M> {
 
     this._distinct = flag;
     return this;
   }
 
-  from(from: string, columns?: string[]): WebSQLSelect {
+  from(from: string, columns?: string[]): WebSQLSelect<M> {
 
     this._from = from;
     if (!columns) {
@@ -50,7 +53,7 @@ export class WebSQLSelect implements Select {
     return this;
   }
 
-  where(criteria: string, params?: paramsType[] | paramsType): WebSQLSelect {
+  where(criteria: string, params?: paramsType[] | paramsType): WebSQLSelect<M> {
 
     if (params !== undefined && !Array.isArray(params)) {
       params = [params];
@@ -60,7 +63,7 @@ export class WebSQLSelect implements Select {
     return this;
   }
 
-  join(tableName: string, on: string, columns?: string[]): WebSQLSelect {
+  join(tableName: string, on: string, columns?: string[]): WebSQLSelect<M> {
 
     this._join.push([tableName, on]);
     if (!!columns) {
@@ -69,7 +72,7 @@ export class WebSQLSelect implements Select {
     return this;
   }
 
-  joinLeft(tableName: string, on: string, columns?: string[]): WebSQLSelect {
+  joinLeft(tableName: string, on: string, columns?: string[]): WebSQLSelect<M> {
 
     this._joinLeft.push([tableName, on]);
     if (!!columns) {
@@ -78,7 +81,7 @@ export class WebSQLSelect implements Select {
     return this;
   }
 
-  joinRight(tableName: string, on: string, columns: string[]): WebSQLSelect {
+  joinRight(tableName: string, on: string, columns: string[]): WebSQLSelect<M> {
 
     this._joinRight.push([tableName, on]);
     this._column.concat(columns);
@@ -159,14 +162,15 @@ export class WebSQLSelect implements Select {
     return this.adapter.query(sql, this._params);
   }
 
-  public async all(): Promise<Model[]> {
+  public async all(): Promise<M[]> {
 
-    let promises: Promise<Model>[] = [];
+    let promises: Promise<M>[] = [];
     let result = await this.execute();
 
     for (let i = 0; result.rows.length > i; i++) {
       let row = result.rows.item(i);
-      promises.push(this.Model.schema.populateFromDB(row));
+      let Model = new this.Model(); 
+      promises.push(this.schema.populateFromDB(row));
     }
 
     let rowset = await Promise.all(promises);
@@ -177,7 +181,7 @@ export class WebSQLSelect implements Select {
     return rowset;
   }
 
-  public async one(): Promise<Model> {
+  public async one(): Promise<M> {
 
     let rowset = await this.all();
     return rowset[0];

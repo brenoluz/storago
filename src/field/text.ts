@@ -17,7 +17,7 @@ export class Text extends Field {
     }
   }
 
-  public fromDB(value: any): any {
+  public fromDB(value: any): string|undefined {
 
     if (typeof value === 'string') {
       return value;
@@ -26,20 +26,20 @@ export class Text extends Field {
     return undefined;
   }
 
-  public toDB(model: Model): any {
+  public toDB<T extends Model>(model: T): string|null {
 
     let name = this.getName();
-    let value = model[name];
+    let value = model[name as keyof T];
+
+    if(value === undefined){
+      return this.getDefaultValue();
+    }
 
     if (typeof value === 'string') {
       return value.trim();
     }
 
-    if ('toString' in value) {
-      return value.toString();
-    }
-
-    return null;
+    throw {code: null, message: `value of ${name} to DB is not a string`};
   }
 
   public castDB(adapter: Adapter): string {

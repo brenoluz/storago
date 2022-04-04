@@ -7,26 +7,31 @@ import { session } from './session';
 import { Create } from "./adapters/create";
 import { UUID } from "./field/uuid";
 
-export class Schema {
+export class Schema<M extends Model> {
 
   protected name: string;
   protected fields: Field[];
   protected adapter: Adapter;
-  protected Model: typeof Model;
+  protected Model: new() => M;
 
-  constructor(model: typeof Model, name: string, fields: Field[], adapter: Adapter = session.adapter) {
+  constructor(model: new() => M, name: string, fields: Field[], adapter: Adapter = session.adapter) {
 
     this.name = name;
     this.fields = fields;
     this.adapter = adapter;
     this.Model = model;
 
-    this.fields.push(new UUID('id', {primary: true}));
+    this.fields.push(new UUID('id', { primary: true }));
+  }
+
+  public getNewModel(): Model {
+
+    return new this.Model();
   }
 
   public create(): Create {
 
-    return this.adapter.create(this.Model);
+    return this.adapter.create<M>(this.Model, this);
   }
 
   public getName(): string {
@@ -37,15 +42,15 @@ export class Schema {
     return this.fields;
   }
 
-  public getField(name: string) : Field {
+  public getField(name: string): Field {
 
-    for(let field of this.getFields()){
-      if(name == field.getName()){
+    for (let field of this.getFields()) {
+      if (name == field.getName()) {
         return field;
       }
     }
 
-    throw {code: null, message: `Field with name: ${name} not exists in ${this.name}`};
+    throw { code: null, message: `Field with name: ${ name } not exists in ${ this.name }` };
   }
 
   public getRealFields(): Field[] {
@@ -79,18 +84,31 @@ export class Schema {
   }
 
   public select(): Select {
-    let select: Select = this.adapter.select(this.Model);
+    let select = this.adapter.select<M>(this.Model, this);
     select.from(this.getName(), this.getColumns());
     return select;
   }
 
   public insert(): Insert {
 
-    let insert: Insert = this.adapter.insert(this.Model);
+    let insert: Insert = this.adapter.insert<M>(this.Model, this);
     return insert;
   }
 
-  public async populateFromDB(row: { [index: string]: any; }, model: Model = new this.Model()): Promise<Model> {
+  public async populateFromDB(row: { [index: string]: any; }): Promise<M> {
+
+    let fields = this.getFields();
+    let model = new this.Model() as M;
+    for (let field of fields) {
+      let name = field.getName();
+      model[name as keyof M] = field.fromDB(row[name]);
+    }
+
+    return model;
+  }
+
+  /*
+  public async populateFromDB<T extends Model>(row: { [index: string]: any; }, model: T): Promise<T> {
 
     let promises: Promise<any>[] = [];
     let fields = this.getRealFields();
@@ -107,7 +125,7 @@ export class Schema {
     let data = await Promise.all(promises);
     for(let k in keys){
       let name = keys[k];
-      model[name] = data[k];
+      model[name as keyof T] = data[k];
     }
 
     return model;
@@ -119,4 +137,5 @@ export class Schema {
       field.defineProperty(this, model);
     }
   } 
+  */
 }

@@ -4,6 +4,7 @@ import { WebSQLSelect } from "./select";
 import { WebSQLInsert } from "./insert";
 import { WebSQLCreate } from "./create";
 import { debug } from "../../debug";
+import { Schema } from "../../schema";
 
 type callbackMigration = {(transaction: SQLTransaction) : Promise<void>};
 
@@ -42,19 +43,19 @@ export class WebSQLAdapter implements Adapter {
     });
   }
 
-  public select(table: typeof Model): WebSQLSelect {
-    let select = new WebSQLSelect(table, this);
+  public select<M extends Model>(model: new() => M, schema: Schema<M>): WebSQLSelect<M> {
+    let select = new WebSQLSelect<M>(model, schema, this);
     return select;
   }
 
-  public insert(model: typeof Model): WebSQLInsert {
-    let insert = new WebSQLInsert(model, this);
+  public insert<M extends Model>(model: new() => M, schema: Schema<M>): WebSQLInsert<M> {
+    let insert = new WebSQLInsert<M>(model, schema, this);
     return insert;
   }
 
-  public create(model: typeof Model) : WebSQLCreate {
+  public create<M extends Model>(model: new() => M, schema: Schema<M>) : WebSQLCreate<M> {
 
-    let create = new WebSQLCreate(model, this);
+    let create = new WebSQLCreate<M>(model, schema, this);
     return create;
   }
 
