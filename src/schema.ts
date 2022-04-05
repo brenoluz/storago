@@ -1,6 +1,7 @@
 import { Adapter } from "./adapters/adapter";
 import { Select } from "./adapters/select";
 import { Insert } from "./adapters/insert";
+import { paramsType } from "./adapters/query";
 import { Model } from "./model";
 import { Field } from "./field/field";
 import { session } from './session';
@@ -10,23 +11,32 @@ import { UUID } from "./field/uuid";
 export class Schema<M extends Model> {
 
   protected name: string;
-  protected fields: Field[];
   protected adapter: Adapter;
-  protected Model: new() => M;
+  protected Model: new () => M;
+  protected fields: Field[] = [
+    new UUID('id', { primary: true }),
+  ];
 
-  constructor(model: new() => M, name: string, fields: Field[], adapter: Adapter = session.adapter) {
+  constructor(model: new () => M, name: string, fields: Field[] = [], adapter: Adapter = session.adapter) {
 
     this.name = name;
-    this.fields = fields;
     this.adapter = adapter;
     this.Model = model;
-
-    this.fields.push(new UUID('id', { primary: true }));
+    this.fields.concat(fields);
   }
 
-  public getNewModel(): Model {
+  public async saveRow(model: Model): Promise<void> {
 
-    return new this.Model();
+    if (Object.keys(model.__data).length === 0) {
+      let insert = this.insert();
+      insert.add(model);
+      return insert.save();
+    }
+  }
+
+  public getModelClass(): (new() => M) {
+
+    return this.Model;
   }
 
   public create(): Create {
@@ -79,18 +89,24 @@ export class Schema<M extends Model> {
     return columns;
   }
 
+  public find(where: string, param: paramsType): Promise<M|undefined> {
+
+    let select = this.select();
+    select.where(where, param);
+    return select.one();
+  };
+
   public getAdapter(): Adapter {
     return this.adapter;
   }
 
-  public select(): Select {
+  public select(): Select<M> {
     let select = this.adapter.select<M>(this.Model, this);
     select.from(this.getName(), this.getColumns());
     return select;
   }
 
   public insert(): Insert {
-
     let insert: Insert = this.adapter.insert<M>(this.Model, this);
     return insert;
   }

@@ -16,7 +16,7 @@ export interface Adapter{
   engine: engineKind;
 
   query(sql: any, data: ObjectArray, transaction: any) : Promise<any>;
-  select<M extends Model>(model: new() => M, schema: Schema<M>) : Select;
+  select<M extends Model>(model: new() => M, schema: Schema<M>) : Select<M>;
   insert<M extends Model>(model: new() => M, schema: Schema<M>) : Insert;
   getVersion() : ''|number;
   create<M extends Model>(model: new() => M, schema: Schema<M>) : Create;

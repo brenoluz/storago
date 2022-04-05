@@ -1,53 +1,9 @@
-import { Schema } from './schema';
-import { Select } from './adapters/select';
-import { paramsType } from './adapters/query';
-import { Create } from './adapters/create';
-
 interface Populate {
   [name: string]: Promise<any>;
 }
 
-export class Model {
+export class Model{
 
-  public static readonly schema: Schema<Model>;
+  public id?: string;
   public __data: Populate = {};
-
-  //[prop: string]: any;
-
-  constructor(){
-
-    let schema = Object.getPrototypeOf(this).constructor.schema;
-    //schema.defineProperties(this);
-  }
-
-  public async save(): Promise<Model> {
-
-    let schema = Object.getPrototypeOf(this).constructor.schema;
-
-    if (Object.keys(this.__data).length === 0) {
-      let insert = schema.insert();
-      insert.add(this);
-      await insert.save();
-    }
-
-    return Promise.resolve(this);
-  }
-
-  public static find(where: string, param: paramsType): Promise<Model|undefined> {
-
-    let select: Select = this.select();
-    select.where(where, param);
-    return select.one();
-  };
-
-  public static select(): Select {
-
-    return this.schema.select();
-  }
-
-  public static create(): Create {
-
-    return this.schema.create();
-  }
-
 }

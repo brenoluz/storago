@@ -9,7 +9,7 @@ type whereTuple = [string, paramsType[] | undefined];
 type joinTuple = [string, string];
 type orderType = "ASC" | "DESC";
 
-export class WebSQLSelect<M extends Model> implements Select {
+export class WebSQLSelect<M extends Model> implements Select<M> {
 
   private Model: new() => M;
   private schema: Schema<M>;
