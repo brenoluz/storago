@@ -17,7 +17,7 @@ export class Text extends Field {
     }
   }
 
-  public fromDB(value: any): string|undefined {
+  public fromDB(value: string|null): string|undefined {
 
     if (typeof value === 'string') {
       return value;

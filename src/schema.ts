@@ -29,11 +29,13 @@ export class Schema<M extends Model> {
 
   public async saveRow(model: Model): Promise<void> {
 
-    if (Object.keys(model.__data).length === 0) {
-      let insert = this.insert();
-      insert.add(model);
-      return insert.save();
+    if (model.__data) {
+      //update area
     }
+
+    let insert = this.insert();
+    insert.add(model);
+    return insert.save();
   }
 
   public getModelClass(): (new () => M) {
@@ -101,7 +103,8 @@ export class Schema<M extends Model> {
   public async populateFromDB(row: { [index: string]: any; }): Promise<M> {
 
     let fields = this.getFields();
-    let model = new this.Model() as M;
+    let model = new this.Model();
+    model.__data = row;
     for (let field of fields) {
       let name = field.getName();
       model[name as keyof M] = field.fromDB(row[name]);

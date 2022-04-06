@@ -1,9 +1,5 @@
-interface Populate {
-  [name: string]: Promise<any>;
-}
-
 export class Model{
 
+  public __data?: object;
   public id?: string;
-  public __data: Populate = {};
 }

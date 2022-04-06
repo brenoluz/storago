@@ -1,6 +1,5 @@
 import { Adapter } from "../adapters/adapter";
 import { Model } from "../model";
-import { Schema } from "../schema";
 
 export enum codeError {
   'EngineNotImplemented' = '@storago/orm/field/engineNotImplemented',

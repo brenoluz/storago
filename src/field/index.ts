@@ -4,6 +4,8 @@ import { Json } from "./json";
 import { Many } from "./many";
 import { Field } from "./field";
 import { IntegerField } from "./integer";
+import { BooleanField } from "./boolean";
+import { DateTimeField } from "./datetime";
 
 export const fields = {
   Field: Field,
@@ -12,4 +14,6 @@ export const fields = {
   Json: Json,
   Many: Many,
   Integer: IntegerField,
+  Boolean: BooleanField,
+  DateTime: DateTimeField,
 }
