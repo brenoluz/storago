@@ -13,7 +13,9 @@ export class Schema<M extends Model> {
   protected name: string;
   protected adapter: Adapter;
   protected Model: new () => M;
-  protected fields: Field[] = [
+  protected fields: Field[] = [];
+
+  protected superFields: Field[] = [
     new UUID('id', { primary: true }),
   ];
 
@@ -34,7 +36,7 @@ export class Schema<M extends Model> {
     }
   }
 
-  public getModelClass(): (new() => M) {
+  public getModelClass(): (new () => M) {
 
     return this.Model;
   }
@@ -49,7 +51,8 @@ export class Schema<M extends Model> {
   }
 
   public getFields(): Field[] {
-    return this.fields;
+
+    return [...this.superFields, ...this.fields];
   }
 
   public getField(name: string): Field {
@@ -63,33 +66,17 @@ export class Schema<M extends Model> {
     throw { code: null, message: `Field with name: ${ name } not exists in ${ this.name }` };
   }
 
-  public getRealFields(): Field[] {
-
-    let fieldFiltered: Field[] = [];
-    for (let field of this.fields) {
-
-      if (!field.isVirtual()) {
-        fieldFiltered.push(field);
-      }
-    }
-
-    return fieldFiltered;
-  }
-
   public getColumns(): string[] {
 
     let columns: string[] = [];
     for (let field of this.fields) {
-
-      if (!field.isVirtual()) {
-        columns.push(field.getName());
-      }
+      columns.push(field.getName());
     }
 
     return columns;
   }
 
-  public find(where: string, param: paramsType): Promise<M|undefined> {
+  public find(where: string, param: paramsType): Promise<M | undefined> {
 
     let select = this.select();
     select.where(where, param);

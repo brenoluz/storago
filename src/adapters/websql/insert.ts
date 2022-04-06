@@ -27,7 +27,7 @@ export class WebSQLInsert<M extends Model> implements Insert {
 
   render(): string {
 
-    let fields = this.schema.getRealFields();
+    let fields = this.schema.getFields();
 
     let length = fields.length - 1;
     let sql = `INSERT INTO ${ this.schema.getName() } (`;

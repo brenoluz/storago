@@ -18,7 +18,7 @@ export class WebSQLCreate<M extends Model> implements Create{
   private getColumns() : string[] {
 
     const columns: string[] = [];
-    let fields = this.schema.getRealFields();
+    let fields = this.schema.getFields();
 
     for(let field of fields){
       let name = field.getName();
