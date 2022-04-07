@@ -24,7 +24,7 @@ export class Schema<M extends Model> {
     this.name = name;
     this.adapter = adapter;
     this.Model = model;
-    this.fields.concat(fields);
+    this.fields = this.fields.concat(fields);
   }
 
   public async saveRow(model: Model): Promise<void> {
