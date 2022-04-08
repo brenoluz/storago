@@ -71,7 +71,7 @@ export class Schema<M extends Model> {
   public getColumns(): string[] {
 
     let columns: string[] = [];
-    for (let field of this.fields) {
+    for (let field of this.getFields()) {
       columns.push(field.getName());
     }
 

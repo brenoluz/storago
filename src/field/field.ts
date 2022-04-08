@@ -39,12 +39,12 @@ export abstract class Field {
 
     let valueDefault = this.config.default;
 
-    if (valueDefault === undefined) {
-      return null;
-    }
-
     if (typeof valueDefault === 'function') {
       return valueDefault();
+    }
+    
+    if (valueDefault === undefined) {
+      valueDefault = null;
     }
 
     return valueDefault;

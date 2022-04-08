@@ -43,7 +43,7 @@ export class UUID extends Field {
     
     let value = super.getDefaultValue();
 
-    if(value === undefined && this.config.primary){
+    if(value === null && this.config.primary){
       value = uuid();
     }
 
