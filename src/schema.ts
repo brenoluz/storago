@@ -1,11 +1,10 @@
-import { Adapter } from "./adapters/adapter";
-import { Select } from "./adapters/select";
-import { Insert } from "./adapters/insert";
-import { paramsType } from "./adapters/query";
+import { Adapter } from "./adapter";
+import { Select } from "./adapter/select";
+import { Insert } from "./adapter/insert";
+import { paramsType } from "./adapter/query";
 import { Model } from "./model";
 import { Field } from "./field/field";
-import { session } from './session';
-import { Create } from "./adapters/create";
+import { Create } from "./adapter/create";
 import { UUID } from "./field/uuid";
 
 export class Schema<M extends Model> {
@@ -19,7 +18,7 @@ export class Schema<M extends Model> {
     new UUID('id', { primary: true }),
   ];
 
-  constructor(model: new () => M, name: string, fields: Field[] = [], adapter: Adapter = session.adapter) {
+  constructor(model: new () => M, name: string, fields: Field[] = [], adapter: Adapter) {
 
     this.name = name;
     this.adapter = adapter;

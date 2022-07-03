@@ -2,7 +2,7 @@
   "name": "@storago/orm",
   "version": "1.0.0",
   "description": "WebSql ORM for Single Page Application",
-  "main": "src/index.ts",
+  "main": "dist/storago.dev.js",
   "types": "dist/types",
   "dependencies": {
     "@types/websql": "^0.0.27"
@@ -27,7 +27,8 @@
     "wdio-chromedriver-service": "^7.2.8",
     "webpack": "^5.69.1",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.7.4"
+    "webpack-dev-server": "^4.7.4",
+    "websql": "^2.0.3"
   },
   "scripts": {
     "test": "npm run build_test && npx wdio run test/wdio.conf.ts",

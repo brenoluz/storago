@@ -1,5 +1,5 @@
 import { Model } from "..";
-import { Adapter, engineKind } from "../adapters/adapter";
+import { Adapter, engineKind } from "../adapter";
 import { Config, defaultConfig, Field, codeError } from "./field";
 
 export interface DateTimeConfig extends Config { }

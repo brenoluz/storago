@@ -1,10 +1,7 @@
-import { Adapter } from './adapters/adapter';
-import { WebSQLAdapter } from './adapters/websql/adapter';
+//import { Adapter } from './adapter/adapter';
+//import { WebSQLAdapter } from './adapter/websql/adapter';
 
-interface Defaults {
-  adapter: Adapter;
-}
-
+/*
 export const session: Defaults = {
   adapter: new WebSQLAdapter('default', 'default db', 1024**2),
 };
@@ -16,3 +13,4 @@ export function setDefaultAdapter(adapter: Adapter){
 export function getDefaultAdapter() : Adapter {
   return session.adapter;
 }
+*/

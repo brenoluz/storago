@@ -1,4 +1,4 @@
-import { Adapter } from "../adapters/adapter";
+import { Adapter } from "../adapter";
 import { Model } from "../model";
 
 export enum codeError {

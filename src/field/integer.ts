@@ -1,4 +1,4 @@
-import { Adapter, engineKind } from "../adapters/adapter";
+import { Adapter, engineKind } from "../adapter";
 import { Model } from "../model";
 import { Field, codeError, Config, defaultConfig } from "./field";
 
