@@ -1,5 +1,5 @@
 import { Model } from "../model";
-import { Adapter, engineKind } from "../adapter";
+import { Adapter, engineKind } from "../adapter/adapter";
 import { Field, Config, defaultConfig, codeError } from "./field";
 
 export interface TextConfig extends Config { }

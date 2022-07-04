@@ -1,4 +1,4 @@
-import { Adapter } from "./adapter";
+import { Adapter } from "./adapter/adapter";
 import { Select } from "./adapter/select";
 import { Insert } from "./adapter/insert";
 import { paramsType } from "./adapter/query";

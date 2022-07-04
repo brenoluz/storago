@@ -1,4 +1,4 @@
-import { Adapter } from "./adapter";
+import { Adapter } from "./adapter/adapter";
 
 type taskCallback = { (transaction: SQLTransaction): Promise<void> };
 

@@ -2,7 +2,7 @@ export { debug } from './debug';
 
 export { Model } from './model';
 export { Schema } from './schema';
-export { Adapter } from './adapter';
+export { Adapter } from './adapter/adapter';
 export { fields, Field } from './field';
 export { Migration } from './migration';
 

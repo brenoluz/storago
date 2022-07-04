@@ -6,9 +6,8 @@ import { Schema } from "../schema";
 
 type callbackMigration = {(transaction: any) : Promise<void>};
 
-export enum engineKind {
+export enum engineKind{
   WebSQL,
-  PostgreSQL,
 }
 
 export interface Adapter{
@@ -21,4 +20,5 @@ export interface Adapter{
   getVersion() : ''|number;
   create<M extends Model>(model: new() => M, schema: Schema<M>) : Create;
   changeVersion(newVersion: number, cb: callbackMigration) : Promise<void>;
+  cast(type: string) : string;
 }

@@ -1,4 +1,4 @@
-import { Adapter, engineKind } from "../adapter";
+import { Adapter, engineKind } from "../adapter/adapter";
 import { Field, Config, defaultConfig, codeError } from "./field";
 import { Model } from "../model";
 import { v4 as uuid } from 'uuid';
