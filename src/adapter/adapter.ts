@@ -6,13 +6,7 @@ import { Schema } from "../schema";
 
 type callbackMigration = {(transaction: any) : Promise<void>};
 
-export enum engineKind{
-  WebSQL,
-}
-
 export interface Adapter{
-
-  engine: engineKind;
 
   query(sql: any, data: ObjectArray, transaction: any) : Promise<any>;
   select<M extends Model>(model: new() => M, schema: Schema<M>) : Select<M>;
@@ -20,5 +14,7 @@ export interface Adapter{
   getVersion() : ''|number;
   create<M extends Model>(model: new() => M, schema: Schema<M>) : Create;
   changeVersion(newVersion: number, cb: callbackMigration) : Promise<void>;
-  cast(type: string) : string;
+  fieldTransformFromDb<Field>(field: Field, value: any) : any;
+  fieldTransformToDB<Field>(field: Field, model: Model): any;
+  fieldCast<Field>(field: Field) : string;
 }

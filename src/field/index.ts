@@ -1,19 +1,19 @@
-export { Field } from "./field";
+export { Field, FieldKind } from "./field";
 
-import { Text } from "./text";
-import { UUID } from "./uuid";
-import { Json } from "./json";
-import { Many } from "./many";
+import { TextField } from "./text";
+import { UUIDField } from "./uuid";
+import { JsonField } from "./json";
+import { ManyField } from "./many";
 import { IntegerField } from "./integer";
 import { BooleanField } from "./boolean";
 import { DateTimeField } from "./datetime";
 
 export const fields = {
-  Text: Text,
-  UUID: UUID,
-  Json: Json,
-  Many: Many,
-  Integer: IntegerField,
-  Boolean: BooleanField,
-  DateTime: DateTimeField,
+  TextField,
+  UUIDField,
+  JsonField,
+  ManyField,
+  IntegerField,
+  BooleanField,
+  DateTimeField,
 }

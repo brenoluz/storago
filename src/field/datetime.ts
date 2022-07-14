@@ -1,5 +1,5 @@
 import { Model } from "..";
-import { Adapter, engineKind } from "../adapter/adapter";
+import { Adapter } from "../adapter/adapter";
 import { Config, defaultConfig, Field, codeError } from "./field";
 
 export interface DateTimeConfig extends Config { }
@@ -17,7 +17,7 @@ export class DateTimeField extends Field {
     }
   }
 
-  public fromDB(value: number|null): Date|undefined{
+  public fromDB(adapter: Adapter, value: number|null): Date|undefined{
 
     if(value === null){
       return undefined;
@@ -26,7 +26,7 @@ export class DateTimeField extends Field {
     return new Date(value);
   }
 
-  public toDB<T extends Model>(model: T) : number {
+  public toDB<T extends Model>(adapter: Adapter, model: T) : number {
     
     let name = this.getName();
     let value = model[name as keyof T];
@@ -44,13 +44,6 @@ export class DateTimeField extends Field {
 
   public castDB(adapter: Adapter): string {
     
-    if(adapter.engine == engineKind.WebSQL){
-      return 'NUMBER';
-    }
-
-    throw {
-      code: codeError.EngineNotImplemented,
-      message: `Engine ${ adapter.engine } not implemented on field Text`
-    };
+    return adapter.fieldCast<DateTimeField>(this);
   }
 }

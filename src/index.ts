@@ -2,8 +2,8 @@ export { debug } from './debug';
 
 export { Model } from './model';
 export { Schema } from './schema';
-export { Adapter } from './adapter/adapter';
-export { fields, Field } from './field';
+export { Adapter, Select, Create, Insert, paramsType } from './adapter';
+export { fields, Field, FieldKind } from './field';
 export { Migration } from './migration';
 
 //export { session, setDefaultAdapter, getDefaultAdapter } from './session';

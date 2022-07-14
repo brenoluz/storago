@@ -1,4 +1,4 @@
-import { Adapter, engineKind } from "../adapter/adapter";
+import { Adapter } from "../adapter/adapter";
 import { Model } from "../model";
 import { Field, codeError, Config, defaultConfig } from "./field";
 
@@ -30,7 +30,7 @@ export class IntegerField extends Field {
     throw {code: null, message: 'value from DB is not a number'};
   }
 
-  public toDB<T extends Model>(model: T): number|null {
+  public toDB<T extends Model>(adapter: Adapter, model: T): number|null {
 
     let name = this.getName();
     let value = model[name as keyof T];
@@ -48,13 +48,6 @@ export class IntegerField extends Field {
 
   public castDB(adapter: Adapter): string {
 
-    if (adapter.engine === engineKind.WebSQL) {
-      return 'INTEGER';
-    }
-
-    throw {
-      code: codeError.EngineNotImplemented,
-      message: `Engine ${ adapter.engine } not implemented on field Integer`
-    };
+    return adapter.fieldCast<IntegerField>(this);
   }
 }

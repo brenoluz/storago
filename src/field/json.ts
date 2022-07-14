@@ -1,6 +1,6 @@
-import { Adapter, engineKind } from "../adapter/adapter";
+import { Adapter } from "../adapter/adapter";
 import { Model } from "../model";
-import { Field, Config, defaultConfig, codeError } from "./field";
+import { Field, Config, defaultConfig, codeError, FieldKind } from "./field";
 
 export interface JsonConfig extends Config {
   type: 'list' | 'object',
@@ -12,9 +12,10 @@ let jsonDefaultConfig: JsonConfig = {
   type: 'object',
 }
 
-export class Json extends Field {
+export class JsonField extends Field {
 
   readonly config: JsonConfig;
+  readonly kind: FieldKind = FieldKind.Json;
 
   constructor(name: string, config: Partial<JsonConfig> = jsonDefaultConfig) {
 
@@ -43,30 +44,28 @@ export class Json extends Field {
     return valueDefault;
   }
 
-  public fromDB(value: any) {
+  public fromDB(adapter: Adapter, value: string | null): object | undefined {
 
-    if (value === undefined || value === '') {
-      let kind = this.config.type;
-      if (kind === 'object') {
+    if (value === undefined) {
+      return undefined;
+    }
+
+    if (value === '') {
+      let type = this.config.type;
+      if (type === 'object') {
         return {};
       } else {
         return [];
       }
     }
 
-    return JSON.parse(value);
+    //return JSON.parse(value);
+    return adapter.fieldTransformFromDb<JsonField>(this, value);
   }
 
   public castDB(adapter: Adapter): string {
 
-    if (adapter.engine == engineKind.WebSQL) {
-      return 'TEXT';
-    }
-
-    throw {
-      code: codeError.EngineNotImplemented,
-      message: `Engine ${ adapter.engine } not implemented on Field Json`
-    };
+    return adapter.fieldCast<JsonField>(this);
   }
 
   public isJsonObject(): boolean {
@@ -77,9 +76,9 @@ export class Json extends Field {
     return false;
   }
 
-  public toDB(model: Model): string | null {
+  public toDB(adapter: Adapter, model: Model): string | null {
 
-    let value = super.toDB(model);
+    let value = super.toDB(adapter, model);
 
     if (value === null) {
       return null;

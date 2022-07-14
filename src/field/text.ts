@@ -1,10 +1,10 @@
 import { Model } from "../model";
-import { Adapter, engineKind } from "../adapter/adapter";
+import { Adapter } from "../adapter/adapter";
 import { Field, Config, defaultConfig, codeError } from "./field";
 
 export interface TextConfig extends Config { }
 
-export class Text extends Field {
+export class TextField extends Field {
 
   readonly config: TextConfig;
 
@@ -17,7 +17,7 @@ export class Text extends Field {
     }
   }
 
-  public fromDB(value: string|null): string|undefined {
+  public fromDB(adapter: Adapter, value: string|null): string|undefined {
 
     if (typeof value === 'string') {
       return value;
@@ -26,7 +26,7 @@ export class Text extends Field {
     return undefined;
   }
 
-  public toDB<T extends Model>(model: T): string|null {
+  public toDB<T extends Model>(adapter: Adapter, model: T): string|null {
 
     let name = this.getName();
     let value = model[name as keyof T];
@@ -44,13 +44,6 @@ export class Text extends Field {
 
   public castDB(adapter: Adapter): string {
 
-    if (adapter.engine == engineKind.WebSQL) {
-      return 'TEXT';
-    }
-
-    throw {
-      code: codeError.EngineNotImplemented,
-      message: `Engine ${ adapter.engine } not implemented on field Text`
-    };
+    return adapter.fieldCast<TextField>(this);
   }
 }

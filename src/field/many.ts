@@ -1,9 +1,9 @@
 import { Model } from "../model";
-import { UUID } from "./uuid";
+import { UUIDField } from "./uuid";
 import { codeError, Config, defaultConfig } from "./field";
 import { Schema } from "..";
 
-export class Many extends UUID{
+export class ManyField extends UUIDField{
 
   readonly config: Config;
   protected referer: typeof Model;

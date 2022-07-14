@@ -5,25 +5,23 @@ import { paramsType } from "./adapter/query";
 import { Model } from "./model";
 import { Field } from "./field/field";
 import { Create } from "./adapter/create";
-import { UUID } from "./field/uuid";
+import { UUIDField } from "./field/uuid";
 
-export class Schema<M extends Model> {
+export abstract class Schema<M extends Model> {
 
-  protected name: string;
-  protected adapter: Adapter;
-  protected Model: new () => M;
-  protected fields: Field[] = [];
+  abstract readonly Model: new () => M;
+  abstract readonly name: string;
+  abstract readonly fields: Field[];
+
+  readonly adapter: Adapter;
 
   protected superFields: Field[] = [
-    new UUID('id', { primary: true }),
+    new UUIDField('id', { primary: true }),
   ];
 
-  constructor(model: new () => M, name: string, fields: Field[] = [], adapter: Adapter) {
+  constructor(adapter: Adapter) {
 
-    this.name = name;
     this.adapter = adapter;
-    this.Model = model;
-    this.fields = this.fields.concat(fields);
   }
 
   public async saveRow(model: Model): Promise<void> {
@@ -106,7 +104,7 @@ export class Schema<M extends Model> {
     model.__data = row;
     for (let field of fields) {
       let name = field.getName();
-      model[name as keyof M] = field.fromDB(row[name]);
+      model[name as keyof M] = field.fromDB(this.adapter, row[name]);
     }
 
     return model;

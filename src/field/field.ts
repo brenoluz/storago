@@ -8,6 +8,15 @@ export enum codeError {
   'RefererNotFound' = '@storago/orm/field/ManyRelationship',
 }
 
+export enum FieldKind{
+  Text,
+  Json,
+  Number,
+  Integer,
+  Date,
+  Datetime,
+}
+
 export interface Config {
   default?: any;
   required: boolean;
@@ -26,6 +35,7 @@ export abstract class Field {
 
   readonly abstract config: Config;
   readonly name: string;
+  readonly kind: FieldKind = FieldKind.Text; 
 
   constructor(name: string) {
     this.name = name;
@@ -94,7 +104,7 @@ export abstract class Field {
   }
   */
   
-  public toDB<T extends Model>(model: T): any {
+  public toDB<T extends Model>(adapter: Adapter, model: T): any {
 
     let name = this.getName();
     let value = model[name as keyof T];
@@ -181,6 +191,6 @@ export abstract class Field {
   }
   */
 
-  abstract fromDB(value: any): any;
+  abstract fromDB(adapter: Adapter, value: any): any;
   abstract castDB(adapter: Adapter): string;
 }

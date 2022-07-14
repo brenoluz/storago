@@ -1,5 +1,5 @@
 import { Model } from "..";
-import { Adapter, engineKind } from "../adapter/adapter";
+import { Adapter } from "../adapter/adapter";
 import { Config, defaultConfig, Field, codeError } from "./field";
 
 export interface BooleanConfig extends Config { }
@@ -17,7 +17,7 @@ export class BooleanField extends Field {
     }
   }
 
-  public fromDB(value: string) : boolean|undefined {
+  public fromDB(adapter: Adapter, value: string) : boolean|undefined {
     
     if(value === null){
       return undefined;
@@ -30,7 +30,7 @@ export class BooleanField extends Field {
     }
   }
 
-  public toDB<T extends Model>(model: T) {
+  public toDB<T extends Model>(adapter: Adapter, model: T) {
     
     let name = this.getName();
     let value = model[name as keyof T];
@@ -52,13 +52,6 @@ export class BooleanField extends Field {
 
   public castDB(adapter: Adapter): string {
     
-    if(adapter.engine == engineKind.WebSQL){
-      return 'BOOLEAN';
-    }
-
-    throw {
-      code: codeError.EngineNotImplemented,
-      message: `Engine ${ adapter.engine } not implemented on field Text`
-    };
+    return adapter.fieldCast<BooleanField>(this);
   }
 }
