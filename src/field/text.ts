@@ -1,12 +1,13 @@
 import { Model } from "../model";
 import { Adapter } from "../adapter/adapter";
-import { Field, Config, defaultConfig, codeError } from "./field";
+import { Field, Config, defaultConfig, FieldKind } from "./field";
 
 export interface TextConfig extends Config { }
 
 export class TextField extends Field {
 
   readonly config: TextConfig;
+  readonly kind: FieldKind = FieldKind.Text;
 
   constructor(name: string, config: Partial<TextConfig> = defaultConfig) {
 

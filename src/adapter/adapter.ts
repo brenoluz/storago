@@ -3,6 +3,7 @@ import { Model } from "../model";
 import { Insert } from "./insert";
 import { Create } from "./create";
 import { Schema } from "../schema";
+import { Field } from "../field/field";
 
 type callbackMigration = {(transaction: any) : Promise<void>};
 
@@ -14,7 +15,7 @@ export interface Adapter{
   getVersion() : ''|number;
   create<M extends Model>(model: new() => M, schema: Schema<M>) : Create;
   changeVersion(newVersion: number, cb: callbackMigration) : Promise<void>;
-  fieldTransformFromDb<Field>(field: Field, value: any) : any;
-  fieldTransformToDB<Field>(field: Field, model: Model): any;
-  fieldCast<Field>(field: Field) : string;
+  fieldTransformFromDb<F extends Field>(field: F, value: any) : any;
+  fieldTransformToDB<F extends Field>(field: F, model: Model): any;
+  fieldCast<F extends Field>(field: F) : string;
 }

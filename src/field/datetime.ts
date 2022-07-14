@@ -1,12 +1,13 @@
 import { Model } from "..";
 import { Adapter } from "../adapter/adapter";
-import { Config, defaultConfig, Field, codeError } from "./field";
+import { Config, defaultConfig, Field, FieldKind } from "./field";
 
 export interface DateTimeConfig extends Config { }
 
 export class DateTimeField extends Field {
 
   readonly config: DateTimeConfig;
+  readonly kind: FieldKind = FieldKind.DateTime;
 
   constructor(name: string, config: Partial<DateTimeConfig> = defaultConfig) {
 

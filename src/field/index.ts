@@ -1,4 +1,4 @@
-export { Field, FieldKind } from "./field";
+export { Field, FieldKind, codeFieldError } from "./field";
 
 import { TextField } from "./text";
 import { UUIDField } from "./uuid";

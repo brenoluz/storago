@@ -1,11 +1,12 @@
 import { Adapter } from "../adapter/adapter";
 import { Model } from "../model";
 
-export enum codeError {
+export enum codeFieldError {
   'EngineNotImplemented' = '@storago/orm/field/engineNotImplemented',
   'DefaultValueIsNotValid' = '@storago/orm/field/defaultParamNotValid',
   'IncorrectValueToDb' = '@storago/orm/field/IncorrectValueToStorageOnDB',
   'RefererNotFound' = '@storago/orm/field/ManyRelationship',
+  'FieldKindNotSupported' = '@storago/orm/field/FieldKindNotSupported',
 }
 
 export enum FieldKind{
@@ -14,7 +15,9 @@ export enum FieldKind{
   Number,
   Integer,
   Date,
-  Datetime,
+  DateTime,
+  UUID,
+  Boolean,
 }
 
 export interface Config {
@@ -35,7 +38,7 @@ export abstract class Field {
 
   readonly abstract config: Config;
   readonly name: string;
-  readonly kind: FieldKind = FieldKind.Text; 
+  abstract readonly kind: FieldKind; 
 
   constructor(name: string) {
     this.name = name;
@@ -192,5 +195,5 @@ export abstract class Field {
   */
 
   abstract fromDB(adapter: Adapter, value: any): any;
-  abstract castDB(adapter: Adapter): string;
+  abstract castDB<A extends Adapter>(adapter: A): string;
 }

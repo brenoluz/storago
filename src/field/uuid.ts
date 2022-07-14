@@ -1,11 +1,12 @@
 import { Adapter } from "../adapter/adapter";
-import { Field, Config, defaultConfig, codeError } from "./field";
+import { Field, Config, defaultConfig, FieldKind } from "./field";
 import { Model } from "../model";
 import { v4 as uuid } from 'uuid';
 
 export class UUIDField extends Field {
 
   readonly config: Config;
+  readonly kind: FieldKind = FieldKind.UUID;
 
   constructor(name: string, config: Partial<Config> = defaultConfig) {
 

@@ -1,6 +1,6 @@
 import { Adapter } from "../adapter/adapter";
 import { Model } from "../model";
-import { Field, Config, defaultConfig, codeError, FieldKind } from "./field";
+import { Field, Config, defaultConfig, codeFieldError, FieldKind } from "./field";
 
 export interface JsonConfig extends Config {
   type: 'list' | 'object',
@@ -35,7 +35,7 @@ export class JsonField extends Field {
         valueDefault = JSON.parse(valueDefault);
       } catch (e) {
         throw {
-          code: codeError.DefaultValueIsNotValid,
+          code: codeFieldError.DefaultValueIsNotValid,
           message: `Default value on JSON field is not a valid json`
         };
       }
@@ -91,7 +91,7 @@ export class JsonField extends Field {
 
     let kind = this.config.type;
     let error = {
-      code: codeError.IncorrectValueToDb,
+      code: codeFieldError.IncorrectValueToDb,
       message: `value is not a valid json`,
     };
 

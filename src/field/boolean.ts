@@ -1,12 +1,13 @@
 import { Model } from "..";
 import { Adapter } from "../adapter/adapter";
-import { Config, defaultConfig, Field, codeError } from "./field";
+import { Config, defaultConfig, Field, FieldKind } from "./field";
 
 export interface BooleanConfig extends Config { }
 
 export class BooleanField extends Field {
 
   readonly config: BooleanConfig;
+  readonly kind: FieldKind = FieldKind.Boolean;
 
   constructor(name: string, config: Partial<BooleanConfig> = defaultConfig){
 
@@ -50,7 +51,7 @@ export class BooleanField extends Field {
     throw {code: null, message: `value of ${name} to DB is not a boolean`};
   }
 
-  public castDB(adapter: Adapter): string {
+  public castDB<A extends Adapter>(adapter: A): string {
     
     return adapter.fieldCast<BooleanField>(this);
   }
