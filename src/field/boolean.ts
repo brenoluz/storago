@@ -7,7 +7,7 @@ export interface BooleanConfig extends Config { }
 export class BooleanField extends Field {
 
   readonly config: BooleanConfig;
-  readonly kind: FieldKind = FieldKind.Boolean;
+  readonly kind: FieldKind = FieldKind.BOOLEAN;
 
   constructor(name: string, config: Partial<BooleanConfig> = defaultConfig) {
 

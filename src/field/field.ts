@@ -10,14 +10,30 @@ export enum codeFieldError {
 }
 
 export enum FieldKind{
-  Text,
-  Json,
-  Numeric,
-  Integer,
-  Date,
-  DateTime,
+  TEXT,
+  VARCHAR,
+  CHARACTER,
+
+  INTEGER,
+  TINYINT,
+  SMALLINT,
+  MEDIUMINT,
+  BIGINT,
+
+  REAL,
+  DOUBLE,
+  FLOAT,
+
+  NUMERIC,
+  DECIMAL,
+  DATE,
+  DATETIME,
+  BOOLEAN,
+
   UUID,
-  Boolean,
+  JSON,
+
+  BLOB,
 }
 
 export interface Config {

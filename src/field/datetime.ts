@@ -7,7 +7,7 @@ export interface DateTimeConfig extends Config { }
 export class DateTimeField extends Field {
 
   readonly config: DateTimeConfig;
-  readonly kind: FieldKind = FieldKind.DateTime;
+  readonly kind: FieldKind = FieldKind.DATETIME;
 
   constructor(name: string, config: Partial<DateTimeConfig> = defaultConfig) {
 

@@ -7,7 +7,7 @@ export interface IntegerConfig extends Config { }
 export class IntegerField extends Field {
 
   readonly config: IntegerConfig;
-  readonly kind: FieldKind = FieldKind.Integer;
+  readonly kind: FieldKind = FieldKind.INTEGER;
 
   constructor(name: string, config: Partial<IntegerConfig> = defaultConfig){
 

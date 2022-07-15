@@ -7,7 +7,7 @@ export interface TextConfig extends Config { }
 export class TextField extends Field {
 
   readonly config: TextConfig;
-  readonly kind: FieldKind = FieldKind.Text;
+  readonly kind: FieldKind = FieldKind.TEXT;
 
   constructor(name: string, config: Partial<TextConfig> = defaultConfig) {
 

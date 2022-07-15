@@ -15,7 +15,7 @@ let jsonDefaultConfig: JsonConfig = {
 export class JsonField extends Field {
 
   readonly config: JsonConfig;
-  readonly kind: FieldKind = FieldKind.Json;
+  readonly kind: FieldKind = FieldKind.JSON;
 
   constructor(name: string, config: Partial<JsonConfig> = jsonDefaultConfig) {
 
