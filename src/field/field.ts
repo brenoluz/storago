@@ -12,7 +12,7 @@ export enum codeFieldError {
 export enum FieldKind{
   Text,
   Json,
-  Number,
+  Numeric,
   Integer,
   Date,
   DateTime,
@@ -107,17 +107,20 @@ export abstract class Field {
   }
   */
   
-  public toDB<T extends Model>(adapter: Adapter, model: T): any {
-
-    let name = this.getName();
-    let value = model[name as keyof T];
-
-    if(value === undefined){
-      return this.getDefaultValue();
+ public toDB<A extends Adapter, M extends Model>(adapter: A, model: M): any {
+   
+   let name = this.getName();
+   let value = model[name as keyof M];
+   
+   if(value === undefined || value === null){
+     return this.getDefaultValue();
     }
-
+    
     return value;
   };
+
+  abstract fromDB(adapter: Adapter, value: any): any;
+  abstract castDB<A extends Adapter>(adapter: A): string;
   
   public isJsonObject(): boolean {
     return false;
@@ -194,6 +197,4 @@ export abstract class Field {
   }
   */
 
-  abstract fromDB(adapter: Adapter, value: any): any;
-  abstract castDB<A extends Adapter>(adapter: A): string;
 }

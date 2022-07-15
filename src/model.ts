@@ -1,14 +1,22 @@
 import { Schema } from "./schema";
 
+export type ConstructorModel<T extends Model> = new(id: string, schema: Schema<T>) => T; 
+
 export class Model{
 
+  readonly __schema: Schema<Model>;
+  readonly id: string;
+
   public __data?: object;
-  public id?: string;
 
-  readonly schema: Schema<Model>;
+  constructor(id: string, schema: Schema<Model>){
+    this.id = id;
+    this.__schema = schema;
+  }
 
-  constructor(schema: Schema<Model>){
+  public async save() : Promise<Model>{
 
-    this.schema = schema;
+    return this.__schema.saveRow(this);
   }
 }
+

@@ -9,7 +9,7 @@ export class BooleanField extends Field {
   readonly config: BooleanConfig;
   readonly kind: FieldKind = FieldKind.Boolean;
 
-  constructor(name: string, config: Partial<BooleanConfig> = defaultConfig){
+  constructor(name: string, config: Partial<BooleanConfig> = defaultConfig) {
 
     super(name);
     this.config = {
@@ -18,41 +18,19 @@ export class BooleanField extends Field {
     }
   }
 
-  public fromDB(adapter: Adapter, value: string) : boolean|undefined {
-    
-    if(value === null){
-      return undefined;
-    }
+  public fromDB(adapter: Adapter, value: string): boolean | undefined {
 
-    if(value === 'true'){
-      return true;
-    }else{
-      return false;
-    }
+    return adapter.fieldTransformFromDb(this, value);
   }
 
-  public toDB<T extends Model>(adapter: Adapter, model: T) {
-    
-    let name = this.getName();
-    let value = model[name as keyof T];
+  public toDB<A extends Adapter, M extends Model>(adapter: A, model: M): any {
 
-    if(value === undefined){
-      return this.getDefaultValue();
-    }
-
-    if(typeof value === 'boolean'){
-      if(value === true){
-        return 'true';
-      }
-
-      return false;
-    }
-
-    throw {code: null, message: `value of ${name} to DB is not a boolean`};
+    let value = super.toDB<A, M>(adapter, model);
+    return adapter.fieldTransformToDB<BooleanField, M>(this, value);
   }
 
   public castDB<A extends Adapter>(adapter: A): string {
-    
+
     return adapter.fieldCast<BooleanField>(this);
   }
 }
