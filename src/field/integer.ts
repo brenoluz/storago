@@ -9,7 +9,7 @@ export class IntegerField extends Field {
   readonly config: IntegerConfig;
   readonly kind: FieldKind = FieldKind.INTEGER;
 
-  constructor(name: string, config: Partial<IntegerConfig> = defaultConfig){
+  constructor(name: string, config: Partial<IntegerConfig> = defaultConfig) {
 
     super(name);
     this.config = {
@@ -18,36 +18,36 @@ export class IntegerField extends Field {
     }
   }
 
-  public fromDB(value: any): number|undefined {
+  public fromDB<A extends Adapter>(adapter: A, value: string): number | undefined {
 
     if (!value) {
       return undefined;
     }
 
-    if(typeof value === 'number'){
+    if (typeof value === 'number') {
       return value;
     }
 
-    throw {code: null, message: 'value from DB is not a number'};
+    throw { code: null, message: 'value from DB is not a number' };
   }
 
-  public toDB<T extends Model>(adapter: Adapter, model: T): number|null {
+  public toDB<A extends Adapter, M extends Model<A>>(adapter: A, model: M): any {
 
     let name = this.getName();
-    let value = model[name as keyof T];
-    
+    let value = model[name as keyof M];
+
     if (value == undefined) {
       return this.getDefaultValue();
     }
 
-    if(typeof value === 'number'){
+    if (typeof value === 'number') {
       return Math.floor(value);
     }
 
-    throw {code: null, message: `value of ${name} to DB is not a integer`};
+    throw { code: null, message: `value of ${ name } to DB is not a integer` };
   }
 
-  public castDB(adapter: Adapter): string {
+  public castDB<A extends Adapter>(adapter: A): string {
 
     return adapter.fieldCast<IntegerField>(this);
   }

@@ -123,7 +123,7 @@ export abstract class Field {
   }
   */
   
- public toDB<A extends Adapter, M extends Model>(adapter: A, model: M): any {
+ public toDB<A extends Adapter, M extends Model<A>>(adapter: A, model: M): any {
    
    let name = this.getName();
    let value = model[name as keyof M];
@@ -135,7 +135,7 @@ export abstract class Field {
     return value;
   };
 
-  abstract fromDB(adapter: Adapter, value: any): any;
+  abstract fromDB<A extends Adapter>(adapter: A, value: any): any;
   abstract castDB<A extends Adapter>(adapter: A): string;
   
   public isJsonObject(): boolean {

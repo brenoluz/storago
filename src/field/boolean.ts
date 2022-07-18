@@ -18,15 +18,15 @@ export class BooleanField extends Field {
     }
   }
 
-  public fromDB(adapter: Adapter, value: string): boolean | undefined {
+  public fromDB<A extends Adapter>(adapter: A, value: string): boolean | undefined {
 
     return adapter.fieldTransformFromDb(this, value);
   }
 
-  public toDB<A extends Adapter, M extends Model>(adapter: A, model: M): any {
+  public toDB<A extends Adapter, M extends Model<A>>(adapter: A, model: M): any {
 
     let value = super.toDB<A, M>(adapter, model);
-    return adapter.fieldTransformToDB<BooleanField, M>(this, value);
+    return adapter.fieldTransformToDB<A, BooleanField, M>(this, value);
   }
 
   public castDB<A extends Adapter>(adapter: A): string {

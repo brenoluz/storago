@@ -2,10 +2,10 @@ import { Adapter } from "./adapter/adapter";
 import { Schema } from "./schema";
 import { Model } from "./model";
 
-export abstract class Scope {
+export abstract class Scope<A extends Adapter> {
 
   readonly adapter: Adapter;
-  readonly schemas: Schema<Model>[] = [];
+  readonly schemas: Schema<A, Model<A>>[] = [];
 
   constructor(adapter: Adapter) {
 

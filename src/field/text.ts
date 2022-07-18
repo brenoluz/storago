@@ -18,7 +18,7 @@ export class TextField extends Field {
     }
   }
 
-  public fromDB(adapter: Adapter, value: string|null): string|undefined {
+  public fromDB<A extends Adapter>(adapter: A, value: string|null): string|undefined {
 
     if (typeof value === 'string') {
       return value;
@@ -27,7 +27,7 @@ export class TextField extends Field {
     return undefined;
   }
 
-  public toDB<T extends Model>(adapter: Adapter, model: T): string|null {
+  public toDB<A extends Adapter, T extends Model<A>>(adapter: A, model: T): string|null {
 
     let name = this.getName();
     let value = model[name as keyof T];
@@ -43,7 +43,7 @@ export class TextField extends Field {
     throw {code: null, message: `value of ${name} to DB is not a string`};
   }
 
-  public castDB(adapter: Adapter): string {
+  public castDB<A extends Adapter>(adapter: A): string {
 
     return adapter.fieldCast<TextField>(this);
   }

@@ -18,7 +18,7 @@ export class DateTimeField extends Field {
     }
   }
 
-  public fromDB(adapter: Adapter, value: number|null): Date|undefined{
+  public fromDB<A extends Adapter>(adapter: A, value: any) : Date|undefined {
 
     if(value === null){
       return undefined;
@@ -27,10 +27,10 @@ export class DateTimeField extends Field {
     return new Date(value);
   }
 
-  public toDB<T extends Model>(adapter: Adapter, model: T) : number {
+  public toDB<A extends Adapter, M extends Model<A>>(adapter: A, model: M) : number {
     
     let name = this.getName();
-    let value = model[name as keyof T];
+    let value = model[name as keyof M];
 
     if(value === undefined){
       return this.getDefaultValue();
@@ -43,7 +43,7 @@ export class DateTimeField extends Field {
     throw {code: null, message: `value of ${name} to DB is not a Date`};
   }
 
-  public castDB(adapter: Adapter): string {
+  public castDB<A extends Adapter>(adapter: A): string {
     
     return adapter.fieldCast<DateTimeField>(this);
   }

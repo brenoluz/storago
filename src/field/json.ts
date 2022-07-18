@@ -44,9 +44,9 @@ export class JsonField extends Field {
     return valueDefault;
   }
 
-  public fromDB(adapter: Adapter, value: string | null): object | undefined {
+  public fromDB<A extends Adapter>(adapter: A, value: string | null): object | undefined {
 
-    if (value === undefined) {
+    if (value === null) {
       return undefined;
     }
 
@@ -63,7 +63,7 @@ export class JsonField extends Field {
     return adapter.fieldTransformFromDb<JsonField>(this, value);
   }
 
-  public castDB(adapter: Adapter): string {
+  public castDB<A extends Adapter>(adapter: A): string {
 
     return adapter.fieldCast<JsonField>(this);
   }
@@ -76,7 +76,7 @@ export class JsonField extends Field {
     return false;
   }
 
-  public toDB(adapter: Adapter, model: Model): string | null {
+  public toDB<A extends Adapter, M extends Model<A>>(adapter: A, model: M): string | null {
 
     let value = super.toDB(adapter, model);
 

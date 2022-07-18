@@ -12,19 +12,19 @@ export enum codeSchemaError {
   'PostSaveNotFound' = '@storago/orm/schema/PostSaveNotFound',
 }
 
-export abstract class Schema<M extends Model> {
+export abstract class Schema<A extends Adapter, M extends Model<A>> {
 
-  abstract readonly Model: ConstructorModel<M>;
+  abstract readonly Model: ConstructorModel<A, M>;
   abstract readonly name: string;
   abstract readonly fields: Field[];
 
-  readonly adapter: Adapter;
+  readonly adapter: A;
 
   protected superFields: Field[] = [
     new UUIDField('id', { primary: true }),
   ];
 
-  constructor(adapter: Adapter) {
+  constructor(adapter: A) {
 
     this.adapter = adapter;
   }
@@ -43,7 +43,7 @@ export abstract class Schema<M extends Model> {
     return this.refreshModel(model);
   }
 
-  public async refreshModel(model: M) : Promise<M> {
+  public async refreshModel(model: M): Promise<M> {
 
     let id = model['id'];
 
@@ -55,14 +55,9 @@ export abstract class Schema<M extends Model> {
     return this.populateFromDB(item, model);
   }
 
-  public getModelClass(): ConstructorModel<M> {
+  public getModelClass(): ConstructorModel<A, M> {
 
     return this.Model;
-  }
-
-  public create(): Create {
-
-    return this.adapter.create<M>(this.Model, this);
   }
 
   public getName(): string {
@@ -102,32 +97,41 @@ export abstract class Schema<M extends Model> {
     return select.one();
   };
 
-  public getAdapter(): Adapter {
+  public getAdapter(): A {
     return this.adapter;
   }
 
-  public select(): Select<M> {
-    let select = this.adapter.select<M>(this.Model, this);
+  public select(): Select<A, M> {
+    let select = this.adapter.select<A, M>(this);
     select.from(this.getName(), this.getColumns());
     return select;
   }
 
-  public insert(): Insert {
-    let insert: Insert = this.adapter.insert<M>(this.Model, this);
+  public insert(): Insert<A, M> {
+    let insert = this.adapter.insert<A, M>(this);
     return insert;
+  }
+
+  public createTable(): Create<A, M> {
+    return this.adapter.create<A, M>(this);
+  }
+
+  public newModel(): M {
+
+    return new this.Model(uuid(), this);
   }
 
   public async populateFromDB(row: { [index: string]: any; }, model?: M): Promise<M> {
 
-    if(model == undefined){
-      model = new this.Model(uuid(), this);
+    if (model == undefined) {
+      model = this.newModel();
     }
 
     let fields = this.getFields();
     model.__data = row;
     for (let field of fields) {
       let name = field.getName();
-      if(name == 'id'){
+      if (name == 'id') {
         continue;
       }
       model[name as keyof M] = field.fromDB(this.adapter, row[name]);

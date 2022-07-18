@@ -26,10 +26,12 @@ export class Migration {
       throw { code: null, message: `FirstAccess Migration not implemented!` };
     }
 
+    /*
     let version = this.adapter.getVersion();
     if (version === '') {
       return this.adapter.changeVersion(0, this.firstAccess);
     }
+    
 
     while (true) {
 
@@ -41,14 +43,14 @@ export class Migration {
 
       await this.adapter.changeVersion(version, task);
     }
-
+*/
     return Promise.resolve();
   }
 
   protected registerFirstAccess(callback: taskCallback): void {
 
     if (this.firstAccess !== undefined) {
-      throw { code: undefined, message: `firstAccess callback alredy registred` };
+      throw { code: undefined, message: `firstAccess callback already registered` };
     }
 
     this.firstAccess = callback;
@@ -57,7 +59,7 @@ export class Migration {
   protected register(version: number, callback: taskCallback): void {
 
     if (this.tasks[version] !== undefined) {
-      throw { code: undefined, message: `callback version ${ version } alredy registred` };
+      throw { code: undefined, message: `callback version ${ version } already registered` };
     }
 
     this.tasks[version] = callback;

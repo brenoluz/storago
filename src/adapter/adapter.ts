@@ -1,21 +1,19 @@
 import { Select } from "./select";
-import { Model, ConstructorModel } from "../model";
+import { Model } from "../model";
 import { Insert } from "./insert";
 import { Create } from "./create";
 import { Schema } from "../schema";
 import { Field } from "../field/field";
 
-type callbackMigration = {(transaction: any) : Promise<void>};
+export interface Adapter {
 
-export interface Adapter{
-
-  query(sql: any, data: ObjectArray, transaction: any) : Promise<any>;
-  select<M extends Model>(model: ConstructorModel<M>, schema: Schema<M>) : Select<M>;
-  insert<M extends Model>(model: ConstructorModel<M>, schema: Schema<M>) : Insert;
-  getVersion() : ''|number;
-  create<M extends Model>(model: ConstructorModel<M>, schema: Schema<M>) : Create;
-  changeVersion(newVersion: number, cb: callbackMigration) : Promise<void>;
-  fieldTransformFromDb<F extends Field>(field: F, value: any) : any;
-  fieldTransformToDB<F extends Field, M extends Model>(field: F, model: M): any;
-  fieldCast<F extends Field>(field: F) : string;
+  select<A extends Adapter, M extends Model<A>>(schema: Schema<A, M>): Select<A, M>;
+  //query(sql: any, data: ObjectArray, ...args: any[]): Promise<any>;
+  insert<A extends Adapter, M extends Model<A>>(schema: Schema<A, M>): Insert<A, M>;
+  create<A extends Adapter, M extends Model<A>>(schema: Schema<A, M>): Create<A, M>;
+  //getVersion(): '' | number;
+  //changeVersion(newVersion: number, cb: callbackMigration): Promise<void>;
+  fieldTransformFromDb<F extends Field>(field: F, value: any): any;
+  fieldTransformToDB<A extends Adapter, F extends Field, M extends Model<A>>(field: F, model: M): any;
+  fieldCast<F extends Field>(field: F): string;
 }
