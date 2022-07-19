@@ -7,6 +7,7 @@ module.exports = {
   devServer: {
     static: './dist/'
   },
+  target: 'node',
   module: {
     rules: [
       {
@@ -21,6 +22,7 @@ module.exports = {
   },
   output: {
     filename: 'storago.dev.js',
+    libraryTarget: 'commonjs',
     path: path.resolve(__dirname, 'dist'),
   },
 };

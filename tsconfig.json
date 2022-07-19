@@ -2,7 +2,7 @@
   "compilerOptions": {
     "outDir": "dist/",
     "sourceMap": true,
-    "target": "es2019",
+    "target": "es6",
     "declarationDir": "dist/types",
     "module": "commonjs",
     "declaration": true,
