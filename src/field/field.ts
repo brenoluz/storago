@@ -123,7 +123,7 @@ export abstract class Field {
   }
   */
   
- public toDB<A extends Adapter, M extends Model<A>>(adapter: A, model: M): any {
+ public toDB<A extends Adapter, M extends Model>(adapter: A, model: M): any {
    
    let name = this.getName();
    let value = model[name as keyof M];

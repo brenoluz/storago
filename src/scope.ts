@@ -5,7 +5,7 @@ import { Model } from "./model";
 export abstract class Scope<A extends Adapter> {
 
   readonly adapter: Adapter;
-  readonly schemas: Schema<A, Model<A>>[] = [];
+  readonly schemas: Schema<A, Model>[] = [];
 
   constructor(adapter: Adapter) {
 

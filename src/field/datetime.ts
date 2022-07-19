@@ -27,7 +27,7 @@ export class DateTimeField extends Field {
     return new Date(value);
   }
 
-  public toDB<A extends Adapter, M extends Model<A>>(adapter: A, model: M) : number {
+  public toDB<A extends Adapter, M extends Model>(adapter: A, model: M) : number {
     
     let name = this.getName();
     let value = model[name as keyof M];

@@ -12,9 +12,9 @@ export enum codeSchemaError {
   'PostSaveNotFound' = '@storago/orm/schema/PostSaveNotFound',
 }
 
-export abstract class Schema<A extends Adapter, M extends Model<A>> {
+export abstract class Schema<A extends Adapter, M extends Model> {
 
-  abstract readonly Model: ConstructorModel<A, M>;
+  abstract readonly Model: ConstructorModel<M>;
   abstract readonly name: string;
   abstract readonly fields: Field[];
 
@@ -29,7 +29,7 @@ export abstract class Schema<A extends Adapter, M extends Model<A>> {
     this.adapter = adapter;
   }
 
-  public async saveRow(model: M): Promise<M> {
+  public async save(model: M): Promise<M> {
 
     if (model.__data) {
       //update area
@@ -55,7 +55,7 @@ export abstract class Schema<A extends Adapter, M extends Model<A>> {
     return this.populateFromDB(item, model);
   }
 
-  public getModelClass(): ConstructorModel<A, M> {
+  public getModelClass(): ConstructorModel<M> {
 
     return this.Model;
   }
@@ -118,7 +118,7 @@ export abstract class Schema<A extends Adapter, M extends Model<A>> {
 
   public newModel(): M {
 
-    return new this.Model(uuid(), this);
+    return new this.Model(uuid());
   }
 
   public async populateFromDB(row: { [index: string]: any; }, model?: M): Promise<M> {

@@ -76,7 +76,7 @@ export class JsonField extends Field {
     return false;
   }
 
-  public toDB<A extends Adapter, M extends Model<A>>(adapter: A, model: M): string | null {
+  public toDB<A extends Adapter, M extends Model>(adapter: A, model: M): string | null {
 
     let value = super.toDB(adapter, model);
 

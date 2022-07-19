@@ -27,7 +27,7 @@ export class TextField extends Field {
     return undefined;
   }
 
-  public toDB<A extends Adapter, T extends Model<A>>(adapter: A, model: T): string|null {
+  public toDB<A extends Adapter, T extends Model>(adapter: A, model: T): string|null {
 
     let name = this.getName();
     let value = model[name as keyof T];

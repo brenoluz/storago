@@ -31,7 +31,7 @@ export class IntegerField extends Field {
     throw { code: null, message: 'value from DB is not a number' };
   }
 
-  public toDB<A extends Adapter, M extends Model<A>>(adapter: A, model: M): any {
+  public toDB<A extends Adapter, M extends Model>(adapter: A, model: M): any {
 
     let name = this.getName();
     let value = model[name as keyof M];

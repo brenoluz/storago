@@ -23,7 +23,7 @@ export class BooleanField extends Field {
     return adapter.fieldTransformFromDb(this, value);
   }
 
-  public toDB<A extends Adapter, M extends Model<A>>(adapter: A, model: M): any {
+  public toDB<A extends Adapter, M extends Model>(adapter: A, model: M): any {
 
     let value = super.toDB<A, M>(adapter, model);
     return adapter.fieldTransformToDB<A, BooleanField, M>(this, value);
