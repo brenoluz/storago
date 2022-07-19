@@ -67,8 +67,6 @@ export abstract class Schema<A extends Adapter, M extends Model> {
 
   public getFields(): Field[] {
 
-
-    console.log('fields', [this.superFields, this.fields]);
     return [...this.superFields, ...this.fields];
   }
 
@@ -87,7 +85,6 @@ export abstract class Schema<A extends Adapter, M extends Model> {
 
     let columns: string[] = [];
     let fields = this.getFields();
-    console.log('fields', fields);
     for (let field of this.getFields()) {
       columns.push(field.getName());
     }
