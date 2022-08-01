@@ -49,6 +49,6 @@ export class UUIDField extends Field {
   public toDB<A extends Adapter, M extends Model>(adapter: A, model: M): any {
 
     let value = super.toDB<A, M>(adapter, model);
-    return adapter.fieldTransformToDB<A, UUIDField, M>(this, value);
+    return adapter.fieldTransformToDB<UUIDField, M>(this, value);
   }
 }

@@ -1,8 +1,8 @@
 import { Model } from "../model";
 import { Adapter } from "./adapter";
 
-export interface Create<A extends Adapter, M extends Model>{
+export interface Create<M extends Model>{
 
-  execute() : Promise<any[] | undefined>;
+  execute() : Promise<void>;
   render() : string;
 }

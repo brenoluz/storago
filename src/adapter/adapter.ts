@@ -5,15 +5,16 @@ import { Create } from "./create";
 import { Schema } from "../schema";
 import { Field } from "../field/field";
 
+export type AdapterConstructor<T> = { new(): T };
+
 export interface Adapter {
 
-  select<A extends Adapter, M extends Model>(schema: Schema<A, M>): Select<A, M>;
-  query(sql: any, params: any[], ...args: any[]): Promise<any[] | undefined>;
-  insert<A extends Adapter, M extends Model>(schema: Schema<A, M>): Insert<A, M>;
-  create<A extends Adapter, M extends Model>(schema: Schema<A, M>): Create<A, M>;
+  select<M extends Model>(schema: Schema<this, M>): Select<M>;
+  insert<M extends Model>(schema: Schema<this, M>): Insert<M>;
+  create<M extends Model>(schema: Schema<this, M>): Create<M>;
   //getVersion(): '' | number;
   //changeVersion(newVersion: number, cb: callbackMigration): Promise<void>;
   fieldTransformFromDb<F extends Field>(field: F, value: any): any;
-  fieldTransformToDB<A extends Adapter, F extends Field, M extends Model>(field: F, model: M): any;
+  fieldTransformToDB<F extends Field, M extends Model>(field: F, model: M): any;
   fieldCast<F extends Field>(field: F): string;
 }

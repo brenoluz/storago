@@ -103,19 +103,19 @@ export abstract class Schema<A extends Adapter, M extends Model> {
     return this.adapter;
   }
 
-  public select(): Select<A, M> {
-    let select = this.adapter.select<A, M>(this);
+  public select(): Select<M> {
+    let select = this.adapter.select<M>(this);
     select.from(this.getName(), this.getColumns());
     return select;
   }
 
-  public insert(): Insert<A, M> {
-    let insert = this.adapter.insert<A, M>(this);
+  public insert(): Insert<M> {
+    let insert = this.adapter.insert<M>(this);
     return insert;
   }
 
-  public createTable(): Create<A, M> {
-    return this.adapter.create<A, M>(this);
+  public createTable(): Create<M> {
+    return this.adapter.create<M>(this);
   }
 
   public newModel(): M {
