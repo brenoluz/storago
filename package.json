@@ -2,10 +2,10 @@
   "name": "@storago/orm",
   "version": "1.0.0",
   "description": "WebSql ORM for Single Page Application",
-  "main": "dist/storago.dev.js",
-  "types": "dist/types",
+  "main": "dist/storago.js",
+  "types": "dist/types/index.d.ts",
   "dependencies": {
-    "@types/websql": "^0.0.27"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
@@ -23,11 +23,11 @@
     "ts-loader": "^9.2.6",
     "ts-node": "^10.5.0",
     "typescript": "^4.5.5",
-    "uuid": "^8.3.2",
     "wdio-chromedriver-service": "^7.2.8",
     "webpack": "^5.69.1",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.7.4",
+    "@types/websql": "^0.0.27",
     "websql": "^2.0.3"
   },
   "scripts": {

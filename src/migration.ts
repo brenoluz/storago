@@ -1,6 +1,6 @@
 import { Adapter } from "./adapter/adapter";
 
-type taskCallback = { (transaction: SQLTransaction): Promise<void> };
+type taskCallback = { (transaction: any): Promise<void> };
 
 interface taskVersion {
   [version: number]: taskCallback;

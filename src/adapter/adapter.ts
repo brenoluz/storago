@@ -2,6 +2,7 @@ import { Select } from "./select";
 import { Model } from "../model";
 import { Insert } from "./insert";
 import { Create } from "./create";
+import { Drop } from "./drop";
 import { Schema } from "../schema";
 import { Field } from "../field/field";
 
@@ -12,6 +13,7 @@ export interface Adapter {
   select<M extends Model>(schema: Schema<this, M>): Select<M>;
   insert<M extends Model>(schema: Schema<this, M>): Insert<M>;
   create<M extends Model>(schema: Schema<this, M>): Create<M>;
+  drop<M extends Model>(schema: Schema<this, M>): Drop<M>;
   //getVersion(): '' | number;
   //changeVersion(newVersion: number, cb: callbackMigration): Promise<void>;
   fieldTransformFromDb<F extends Field>(field: F, value: any): any;

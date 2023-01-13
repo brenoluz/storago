@@ -1,6 +1,7 @@
 import { Adapter } from "./adapter/adapter";
 import { Select } from "./adapter/select";
 import { Insert } from "./adapter/insert";
+import { Drop } from "./adapter/drop";
 import { paramsType } from "./adapter/query";
 import { Model, ConstructorModel } from "./model";
 import { Field } from "./field/field";
@@ -16,7 +17,7 @@ export abstract class Schema<A extends Adapter, M extends Model> {
 
   abstract readonly Model: ConstructorModel<M>;
   abstract readonly name: string;
-  
+
   readonly fields: Field[] = [];
 
   readonly adapter: A;
@@ -50,7 +51,7 @@ export abstract class Schema<A extends Adapter, M extends Model> {
 
     let item = await this.find('id = ?', id);
     if (item === undefined) {
-      throw { code: codeSchemaError.PostSaveNotFound, message: `Fail to find id: ${ id }` };
+      throw { code: codeSchemaError.PostSaveNotFound, message: `Fail to find id: ${id}` };
     }
 
     return this.populateFromDB(item, model);
@@ -78,7 +79,7 @@ export abstract class Schema<A extends Adapter, M extends Model> {
       }
     }
 
-    throw { code: null, message: `Field with name: ${ name } not exists in ${ this.name }` };
+    throw { code: null, message: `Field with name: ${name} not exists in ${this.name}` };
   }
 
   public getColumns(): string[] {
@@ -116,6 +117,10 @@ export abstract class Schema<A extends Adapter, M extends Model> {
 
   public createTable(): Create<M> {
     return this.adapter.create<M>(this);
+  }
+
+  public drop(): Drop<M> {
+    return this.adapter.drop<M>(this);
   }
 
   public newModel(): M {

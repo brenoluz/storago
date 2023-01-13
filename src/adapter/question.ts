@@ -6,6 +6,18 @@ class Model {
   id?: number;
 }
 
+interface Adapter {
+
+  getSelect<M extends Model>(schema: Schema<this, M>): Select<M>;
+}
+
+abstract class Select<M extends Model>{
+
+  getAll(): M[] {
+    return []
+  }
+}
+
 abstract class Schema<A extends Adapter, M extends Model>{
 
   abstract Model: new () => M;
@@ -23,18 +35,6 @@ abstract class Schema<A extends Adapter, M extends Model>{
   select(): Select<M> {
     return this.adapter.getSelect<M>(this);
   }
-}
-
-abstract class Select<M extends Model>{
-
-  getAll(): M[] {
-    return []
-  }
-}
-
-interface Adapter {
-
-  getSelect<M extends Model>(schema: Schema<this, M>): Select<M>;
 }
 
 ///adapter for sqlite
@@ -64,5 +64,5 @@ let ZooAdapter = new SqliteAdapter();
 let schemaMonkey = new MonkeySchema<SqliteAdapter>(ZooAdapter);
 
 let select = schemaMonkey.select();
-//type of select = Select<MonkeyModel>, but I would like that the return was SqliteSelect<MonkeyModel>
+//type of select = Select<MonkeyModel>, but I would like the return to be SqliteSelect<MonkeyModel>
 

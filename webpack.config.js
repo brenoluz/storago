@@ -21,7 +21,7 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
   output: {
-    filename: 'storago.dev.js',
+    filename: 'storago.js',
     libraryTarget: 'commonjs',
     path: path.resolve(__dirname, 'dist'),
   },

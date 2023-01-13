@@ -14,10 +14,7 @@
     "strictNullChecks": true,
     "types": [
       "node",
-      "webdriverio/async",
-      "@types/websql",
-      "@wdio/mocha-framework",
-      "@wdio/devtools-service"
+      "@types/websql"
     ]
   },
   "include": [
