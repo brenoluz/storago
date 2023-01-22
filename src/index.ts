@@ -1,6 +1,6 @@
 export { debug } from './debug';
 
-export { Model, ConstructorModel } from './model';
+export { ModelInterface, ModelConstructor } from './model';
 export { Schema } from './schema';
 export * from './adapter';
 export { fields, Field, FieldKind, codeFieldError } from './field';

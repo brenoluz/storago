@@ -1,5 +1,5 @@
 import { Adapter } from "../adapter/adapter";
-import { Model } from "../model";
+import { ModelInterface } from "../model";
 
 export enum codeFieldError {
   'EngineNotImplemented' = '@storago/orm/field/engineNotImplemented',
@@ -123,7 +123,7 @@ export abstract class Field {
   }
   */
   
- public toDB<A extends Adapter, M extends Model>(adapter: A, model: M): any {
+ public toDB<A extends Adapter, M extends ModelInterface>(adapter: A, model: M): any {
    
    let name = this.getName();
    let value = model[name as keyof M];

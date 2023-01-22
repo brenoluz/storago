@@ -1,4 +1,4 @@
-import { Model } from "..";
+import { ModelInterface } from "..";
 import { Adapter } from "../adapter/adapter";
 import { Config, defaultConfig, Field, FieldKind } from "./field";
 
@@ -23,7 +23,7 @@ export class BooleanField extends Field {
     return adapter.fieldTransformFromDb(this, value);
   }
 
-  public toDB<A extends Adapter, M extends Model>(adapter: A, model: M): any {
+  public toDB<A extends Adapter, M extends ModelInterface>(adapter: A, model: M): any {
 
     let value = super.toDB<A, M>(adapter, model);
     return adapter.fieldTransformToDB<BooleanField, M>(this, value);

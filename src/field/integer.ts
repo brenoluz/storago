@@ -1,5 +1,5 @@
 import { Adapter } from "../adapter/adapter";
-import { Model } from "../model";
+import { ModelInterface } from "../model";
 import { Field, Config, defaultConfig, FieldKind } from "./field";
 
 export interface IntegerConfig extends Config { }
@@ -31,7 +31,7 @@ export class IntegerField extends Field {
     throw { code: null, message: 'value from DB is not a number' };
   }
 
-  public toDB<A extends Adapter, M extends Model>(adapter: A, model: M): any {
+  public toDB<A extends Adapter, M extends ModelInterface>(adapter: A, model: M): any {
 
     let name = this.getName();
     let value = model[name as keyof M];

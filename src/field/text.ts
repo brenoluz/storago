@@ -1,4 +1,4 @@
-import { Model } from "../model";
+import { ModelInterface } from "../model";
 import { Adapter } from "../adapter/adapter";
 import { Field, Config, defaultConfig, FieldKind } from "./field";
 
@@ -27,7 +27,7 @@ export class TextField extends Field {
     return undefined;
   }
 
-  public toDB<A extends Adapter, T extends Model>(adapter: A, model: T): string|null {
+  public toDB<A extends Adapter, T extends ModelInterface>(adapter: A, model: T): string|null {
 
     let name = this.getName();
     let value = model[name as keyof T];

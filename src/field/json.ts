@@ -1,5 +1,5 @@
 import { Adapter } from "../adapter/adapter";
-import { Model } from "../model";
+import { ModelInterface } from "../model";
 import { Field, Config, defaultConfig, codeFieldError, FieldKind } from "./field";
 
 export interface JsonConfig extends Config {
@@ -76,7 +76,7 @@ export class JsonField extends Field {
     return false;
   }
 
-  public toDB<A extends Adapter, M extends Model>(adapter: A, model: M): string | null {
+  public toDB<A extends Adapter, M extends ModelInterface>(adapter: A, model: M): string | null {
 
     let value = super.toDB(adapter, model);
 

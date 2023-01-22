@@ -1,4 +1,4 @@
-import { Model } from "../model";
+import { ModelInterface } from "../model";
 import { UUIDField } from "./uuid";
 import { Config, defaultConfig } from "./field";
 import { Schema } from "..";
@@ -6,12 +6,12 @@ import { Schema } from "..";
 export class ManyField extends UUIDField {
 
   readonly config: Config;
-  protected referer: typeof Model;
+  //protected referer: typeof Model;
 
-  constructor(name: string, referer: typeof Model, config?: Partial<Config>) {
+  constructor(name: string, config?: Partial<Config>) {
 
     super(`${ name }_id`);
-    this.referer = referer;
+    //this.referer = referer;
     this.config = {
       ...defaultConfig,
       ...config,

@@ -1,6 +1,6 @@
 import { Adapter } from "../adapter/adapter";
 import { Field, Config, defaultConfig, FieldKind } from "./field";
-import { Model } from "../model";
+import { ModelInterface } from "../model";
 import { v4 as uuid } from 'uuid';
 
 export class UUIDField extends Field {
@@ -46,7 +46,7 @@ export class UUIDField extends Field {
     return value;
   }
 
-  public toDB<A extends Adapter, M extends Model>(adapter: A, model: M): any {
+  public toDB<A extends Adapter, M extends ModelInterface>(adapter: A, model: M): any {
 
     let value = super.toDB<A, M>(adapter, model);
     return adapter.fieldTransformToDB<UUIDField, M>(this, value);

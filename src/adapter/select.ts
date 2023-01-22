@@ -1,8 +1,7 @@
-import { Model } from "../model";
+import { ModelInterface } from "../model";
 import { paramsType } from "./query";
-import { Adapter } from "./adapter";
 
-export interface Select<M extends Model> {
+export interface Select<M extends ModelInterface> {
 
   from(from: string, columns?: string[]): Select<M>;
   execute(): Promise<any>;

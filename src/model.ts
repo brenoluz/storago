@@ -1,16 +1,9 @@
-import { Adapter } from "./adapter";
-import { Schema } from "./schema";
-
-export type ConstructorModel<M extends Model> = new (id: string) => M;
-
-export class Model{
-
-  readonly id: string;
-
-  public __data?: object;
-
-  constructor(id: string) {
-    this.id = id;
-  }
+export interface ModelInterface {
+  id: string,
+  __data?: ModelInterface,
 }
 
+type RequiredKeys<T> = { [K in keyof T]-?: {} extends Pick<T, K> ? never : K }[keyof T];
+
+
+export type ModelConstructor<M extends ModelInterface> = new (data: M) => M;
