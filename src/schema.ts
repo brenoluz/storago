@@ -3,21 +3,18 @@ import { Select } from "./adapter/select";
 import { Insert } from "./adapter/insert";
 import { Drop } from "./adapter/drop";
 import { paramsType } from "./adapter/query";
-import { ModelConstructor, ModelInterface } from "./model";
+import { ModelConstructor, Model } from "./model";
 import { Field } from "./field/field";
 import { Create } from "./adapter/create";
 import { UUIDField } from "./field/uuid";
-import { v4 as uuid } from 'uuid';
-
-type RequiredKeys<T> = { [K in keyof T]-?: {} extends Pick<T, K> ? never : K }[keyof T];
 
 export enum codeSchemaError {
   'PostSaveNotFound' = '@storago/orm/schema/PostSaveNotFound',
 }
 
-export abstract class Schema<A extends Adapter, M extends ModelInterface> {
+export abstract class Schema<A extends Adapter, M extends Model> {
 
-  abstract readonly Model?: ModelConstructor<M>;
+  abstract readonly Model: ModelConstructor<M>;
   abstract readonly name: string;
 
   readonly fields: Field[] = [];
@@ -128,19 +125,17 @@ export abstract class Schema<A extends Adapter, M extends ModelInterface> {
     return this.adapter.drop<M>(this);
   }
 
-  public new(data: M): M {
+  public new(...args: ConstructorParameters<typeof this.Model>): M {
 
-    if(this.Model){
-      const model = new this.Model(data);
-      return model;
-    }
-
-    return data;
+    const model = new this.Model(...args);
+    return model;
   }
 
   public async populateFromDB(row: { [index: string]: any; }, model?: M): Promise<M> {
 
     if (model == undefined) {
+
+      let params = {};
       model = this.new(row.id);
     }
 

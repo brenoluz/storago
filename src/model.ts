@@ -1,9 +1,16 @@
 export interface ModelInterface {
   id: string,
-  __data?: ModelInterface,
+  __data?: any,
 }
 
-type RequiredKeys<T> = { [K in keyof T]-?: {} extends Pick<T, K> ? never : K }[keyof T];
+export type ModelConstructor<M> = new (id: string, ...args: any) => M;
 
+export class Model {
 
-export type ModelConstructor<M extends ModelInterface> = new (data: M) => M;
+  id: string;
+  __data?: ModelInterface;
+
+  constructor(id: string) {
+    this.id = id;
+  }
+}

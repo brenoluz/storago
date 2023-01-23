@@ -1,6 +1,6 @@
-import { ModelInterface } from "../model";
+import { Model } from "../model";
 
-export interface Insert<M extends ModelInterface>{
+export interface Insert<M extends Model>{
 
   render() : string;
   execute() : Promise<any>;
