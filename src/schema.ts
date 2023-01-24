@@ -3,7 +3,7 @@ import { Select } from "./adapter/select";
 import { Insert } from "./adapter/insert";
 import { Drop } from "./adapter/drop";
 import { paramsType } from "./adapter/query";
-import { ModelConstructor, Model } from "./model";
+import { Model } from "./model";
 import { Field } from "./field/field";
 import { Create } from "./adapter/create";
 import { UUIDField } from "./field/uuid";
@@ -14,7 +14,7 @@ export enum codeSchemaError {
 
 export abstract class Schema<A extends Adapter, M extends Model> {
 
-  abstract readonly Model: ModelConstructor<M>;
+  //abstract readonly Model: ModelConstructor<M>;
   abstract readonly name: string;
 
   readonly fields: Field[] = [];
@@ -44,25 +44,15 @@ export abstract class Schema<A extends Adapter, M extends Model> {
       await insert.save();
     }
 
-    return this.refreshModel(model);
+    return model;
   }
 
-  public async refreshModel(model: M): Promise<M> {
-
-    let id = model['id'];
-
-    let item = await this.find('id = ?', id);
-    if (item === undefined) {
-      throw { code: codeSchemaError.PostSaveNotFound, message: `Fail to find id: ${id}` };
-    }
-
-    return this.populateFromDB(item, model);
-  }
-
+  /*
   public getModelClass(): ModelConstructor<M> | undefined {
 
     return this.Model;
   }
+  */
 
   public getName(): string {
     return this.name;
@@ -88,7 +78,7 @@ export abstract class Schema<A extends Adapter, M extends Model> {
 
     let columns: string[] = [];
     let fields = this.getFields();
-    for (let field of this.getFields()) {
+    for (let field of fields) {
       columns.push(field.getName());
     }
 
@@ -125,62 +115,23 @@ export abstract class Schema<A extends Adapter, M extends Model> {
     return this.adapter.drop<M>(this);
   }
 
-  public new(...args: ConstructorParameters<typeof this.Model>): M {
+  public async populateFromDB(row: { [index: string]: any; }): Promise<M> {
 
-    const model = new this.Model(...args);
-    return model;
-  }
-
-  public async populateFromDB(row: { [index: string]: any; }, model?: M): Promise<M> {
-
-    if (model == undefined) {
-
-      let params = {};
-      model = this.new(row.id);
-    }
+    let data: { [key: string]: any } = {};
 
     let fields = this.getFields();
-    model.__data = row as M;
+
     for (let field of fields) {
       let name = field.getName();
       if (name == 'id') {
         continue;
       }
-      model[name as keyof M] = field.fromDB(this.adapter, row[name]);
+
+      data[name] = field.fromDB(this.adapter, row[name]);
     }
 
-    return model;
+    return this.createFromInterface(data);
   }
 
-  /*
-  public async populateFromDB<T extends Model>(row: { [index: string]: any; }, model: T): Promise<T> {
-
-    let promises: Promise<any>[] = [];
-    let fields = this.getRealFields();
-    let keys: string[] = [];
-  
-    for (let field of fields) {
-      let name = field.getName();
-      let promisePopulate = field.populate(model, row);
-      model.__data[name] = promisePopulate;
-      promises.push(promisePopulate);
-      keys.push(name);
-    }
-
-    let data = await Promise.all(promises);
-    for(let k in keys){
-      let name = keys[k];
-      model[name as keyof T] = data[k];
-    }
-
-    return model;
-  }
-
-  public defineProperties(model: Model) : void {
-
-    for(let field of this.getFields()){
-      field.defineProperty(this, model);
-    }
-  } 
-  */
+  abstract createFromInterface(data: Object): M;
 }

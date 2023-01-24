@@ -1,16 +1,22 @@
 export interface ModelInterface {
-  id: string,
+  readonly id: string,
   __data?: any,
 }
 
-export type ModelConstructor<M> = new (id: string, ...args: any) => M;
+//export type ModelConstructor<M> = new (id: string, ...args: any) => M;
 
-export class Model {
+export class Model implements ModelInterface {
 
-  id: string;
+  readonly id: string;
   __data?: ModelInterface;
 
   constructor(id: string) {
     this.id = id;
+  }
+
+  static createFromInterface(data: ModelInterface) : Model {
+    
+    const model = new Model(data.id);
+    return model;
   }
 }

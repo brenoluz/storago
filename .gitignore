@@ -3,3 +3,4 @@ node_modules/
 /test/server/bundle.js
 package-lock.json
 dist/types
+dist/storago.js
