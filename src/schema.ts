@@ -14,7 +14,6 @@ export enum codeSchemaError {
 
 export abstract class Schema<A extends Adapter, M extends Model> {
 
-  //abstract readonly Model: ModelConstructor<M>;
   abstract readonly name: string;
 
   readonly fields: Field[] = [];
@@ -46,13 +45,6 @@ export abstract class Schema<A extends Adapter, M extends Model> {
 
     return model;
   }
-
-  /*
-  public getModelClass(): ModelConstructor<M> | undefined {
-
-    return this.Model;
-  }
-  */
 
   public getName(): string {
     return this.name;

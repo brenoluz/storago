@@ -19,7 +19,12 @@ export class UUIDField extends Field {
 
   public castDB(adapter: Adapter): string {
 
-    return adapter.fieldCast<UUIDField>(this);
+    let cast = adapter.fieldCast<UUIDField>(this);
+    if (this.config.primary) {
+      cast += ' PRIMARY KEY';
+    }
+
+    return cast;
   }
 
   public fromDB(value: any): string | undefined {
